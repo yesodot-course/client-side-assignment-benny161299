@@ -146,7 +146,7 @@
 .table tbody tr:hover { background: rgba(255,255,255,0.03); }
 
 .nameCell { display: flex; flex-direction: column; gap: 0.2rem; }
-.itemName { color: #f3f4f6; font-weight: 500; }
+.itemName { color: #020c22; font-weight: 500; }
 .itemDesc { font-size: 0.8rem; color: #6b7280; }
 
 .thumb {

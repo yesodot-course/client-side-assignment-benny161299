@@ -3,6 +3,7 @@ import { toast } from 'react-toastify';
 import Navbar from '../components/Navbar';
 import ItemForm, { type ItemFormData } from '../components/ItemForm';
 import SupplierForm from '../components/SupplierForm';
+import AnalysisDashboard from '../components/AnalysisDashboard';
 import {
   useItems,
   useCreateItem,
@@ -20,7 +21,7 @@ import type { IItem, ISupplier } from '../interfaces';
 import styles from './AdminPage.module.css';
 
 // ─── Tab type ──────────────────────────────────────────────────────────────────
-type Tab = 'items' | 'suppliers';
+type Tab = 'items' | 'suppliers' | 'analysis';
 
 // ─── Confirm dialog (inline) ──────────────────────────────────────────────────
 function ConfirmDialog({
@@ -449,7 +450,7 @@ export default function AdminPage() {
       <main className={styles.main}>
         <header className={styles.pageHeader}>
           <h1 className={styles.pageTitle}>⚙️ ממשק ניהול</h1>
-          <p className={styles.pageSubtitle}>ניהול מוצרים וספקים של החנות</p>
+          <p className={styles.pageSubtitle}>ניהול מוצרים, ספקים ואנליטיקה</p>
         </header>
 
         {/* Tabs */}
@@ -472,11 +473,21 @@ export default function AdminPage() {
           >
             🏭 ספקים
           </button>
+          <button
+            id="admin-tab-analysis"
+            role="tab"
+            aria-selected={activeTab === 'analysis'}
+            className={`${styles.tab} ${activeTab === 'analysis' ? styles.tabActive : ''}`}
+            onClick={() => setActiveTab('analysis')}
+          >
+            📊 אנליטיקה
+          </button>
         </div>
 
         {/* Tab Content */}
         {activeTab === 'items'     && <ItemsTab />}
         {activeTab === 'suppliers' && <SuppliersTab />}
+        {activeTab === 'analysis'  && <AnalysisDashboard />}
       </main>
     </>
   );
