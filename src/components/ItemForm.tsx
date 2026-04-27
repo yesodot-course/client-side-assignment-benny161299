@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import type { IItem, ISupplier } from '../interfaces';
 import styles from './ItemForm.module.css';
 
@@ -35,10 +35,6 @@ export default function ItemForm({ suppliers, initial, onSubmit, onClose, isPend
   const selectedSupplier = suppliers.find((s) => s._id === supplierId);
   const supplierItemNames = selectedSupplier?.items.map((i) => i.itemName) ?? [];
 
-  useEffect(() => {
-    // if edit mode — keep existing name; otherwise clear when supplier changes
-    if (!initial) setName('');
-  }, [supplierId, initial]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -69,7 +65,11 @@ export default function ItemForm({ suppliers, initial, onSubmit, onClose, isPend
             <select
               id="item-form-supplier"
               value={supplierId}
-              onChange={(e) => setSupplierId(e.target.value)}
+              onChange={(e) => {
+                setSupplierId(e.target.value);
+                // Reset name when supplier changes in create-mode
+                if (!isEdit) setName('');
+              }}
               required
               disabled={isEdit}   // cannot change supplier on edit
             >

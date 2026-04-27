@@ -1,11 +1,12 @@
 import { apiClient } from './client';
 import type { IOrder, IOrderItem, ApiResponse } from '../interfaces';
 
+/** Matches the server's CreateOrderDTO exactly.
+ * shopProfit is computed server-side; orderDate is set to new Date() server-side.
+ */
 export interface CreateOrderPayload {
   items: IOrderItem[];
   address: string;
-  orderDate: string;
-  shopProfit: number;
 }
 
 export const createOrder = async (data: CreateOrderPayload): Promise<IOrder> => {

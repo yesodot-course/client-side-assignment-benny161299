@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
@@ -12,13 +12,19 @@ import styles from './CartPage.module.css';
 // ─── Recommendations ────────────────────────────────────────────────────────────
 function Recommendations({ cartItems }: { cartItems: ICartItem[] }) {
   const { data: allItems = [] } = useItems();
-  const cartIds = new Set(cartItems.map((ci) => ci.item._id));
-  const cartCategories = new Set(cartItems.map((ci) => ci.item.category));
 
-  const recs = allItems
-    .filter((i) => !cartIds.has(i._id) && cartCategories.has(i.category) && i.stock > 0)
-    .sort(() => Math.random() - 0.5)
-    .slice(0, 4);
+  // Deterministic shuffle seeded by cart item IDs — changes when cart changes,
+  // stays stable across re-renders (satisfies react-hooks/purity).
+  const recs = useMemo(() => {
+    const cartIds        = new Set(cartItems.map((ci) => ci.item._id));
+    const cartCategories = new Set(cartItems.map((ci) => ci.item.category));
+    const seed = cartItems.reduce((acc, ci) => acc + ci.item._id.charCodeAt(0), 0);
+
+    return allItems
+      .filter((i) => !cartIds.has(i._id) && cartCategories.has(i.category) && i.stock > 0)
+      .sort((a, b) => ((a._id.charCodeAt(seed % a._id.length) - b._id.charCodeAt(seed % b._id.length)) || 0))
+      .slice(0, 4);
+  }, [allItems, cartItems]);
 
   if (recs.length === 0) return null;
 
@@ -55,24 +61,17 @@ export default function CartPage() {
       toast.error('נא להזין כתובת למשלוח');
       return;
     }
-    // Business-rule guard (also enforced server-side)
+    // Business-rule guards (also enforced server-side)
     const uniqueCount = cartItems.length;
-    const totalQty = cartItems.reduce((s, ci) => s + ci.quantity, 0);
+    const totalQty    = cartItems.reduce((s, ci) => s + ci.quantity, 0);
     if (uniqueCount > 10) { toast.error('מקסימום 10 פריטים שונים בהזמנה'); return; }
-    if (totalQty > 50)    { toast.error('מקסימום 50 פריטים בסה"כ'); return; }
-
-    const shopProfit = cartItems.reduce((sum, ci) => {
-      const supplier = typeof ci.item.supplier === 'object' ? ci.item.supplier : null;
-      // We don't have supplierPrice on the client — profit is tracked server-side
-      return sum + ci.item.price * ci.quantity;
-    }, 0);
+    if (totalQty    > 50) { toast.error('מקסימום 50 פריטים בסה"כ'); return; }
 
     try {
+      // shopProfit and orderDate are computed server-side — we only send items + address
       await createOrder({
         items: cartItems.map((ci) => ({ itemId: ci.item._id, quantity: ci.quantity })),
         address,
-        orderDate: new Date().toISOString(),
-        shopProfit,
       });
       dispatch(clearCart());
       toast.success('✅ ההזמנה בוצעה בהצלחה!');
