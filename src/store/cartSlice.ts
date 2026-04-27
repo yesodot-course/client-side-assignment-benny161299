@@ -1,5 +1,6 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import type { ICartItem, IItem } from '../../interfaces';
+import { createSlice } from '@reduxjs/toolkit';
+import type { PayloadAction } from '@reduxjs/toolkit';
+import type { ICartItem, IItem } from '../interfaces';
 
 // ─── Business Rules (validated server-side too, but guard client-side first) ──
 const MAX_UNIQUE_ITEMS = 10;

@@ -1,73 +1,117 @@
-# React + TypeScript + Vite
+🌐 Midterm-Client-side Assignment
+Welcome to the Midterm Client-side Assignment! This assignment will test your knowledge of React (including useQuery,Redux, and React Router), as well as your ability to work with a REST API.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This will be the first time you integrate a React application with a REST API that you have built yourself (the very same API you built for the Midterm Server-side Assignment).
 
-Currently, two official plugins are available:
+To refresh your memory, here are the specifications of the store you built for the Midterm Server-side Assignment:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+💽 Information
+Items:
+name
+price
+stock
+category
+supplier
+image
+description
+Suppliers:
+name
+items and their price
+Orders:
+items and their quantity
+address
+order date
+shop profit
+🛠️ Rules
+Inventory Management:
 
-## React Compiler
+Each item price must be at least 30% higher than the supplier price. Our store cannot operate at a loss.
+The stock should be automatically updated based on the orders.
+If Item is out of stock, return an appropriate status code.
+Order Constraints:
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Item quantity in a new order must be less than or equal to the stock in order to proceed.
+Every order can have a maximum of 10 unique items.
+A customer can order a maximum of 50 items in total.
+Collections Reliability:
 
-## Expanding the ESLint configuration
+If a supplier gets deleted. All the supplier items should be deleted automatically from the store items.
+If a supplier item gets deleted. All the store items should be deleted automatically.
+If a supplier item price changes. All the store items should be updated automatically. (The price difference should be at least 30%)
+When supplier name changes, all the store items should be updated automatically.
+Revenue Analysis (on demand):
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+Get the monthly revenue of the store. (last 30 days)
+Get the weekly most profitable category. (last 7 days)
+Get the daily most profitable item. (last 24 hours)
+Find the items with the highest and lowest profit margin. (all time)
+Get the supplier whose items brought the most profit. (all time)
+Get the amount of money spent for each supplier including both orders and items currently in store, sorted from highest to lowest. (all time)
+🖥️ UI Pages
+🏠 Home
+The home page will be the main page of your application. It will display a list of all the products in your store. Each product will have a link to its own details page, as well as an add to cart button (with a quantity input).
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+The user should be able to filter the products by category, supplier and price range. Also, it should be possible to sort the products by price (ascending and descending) and name (ascending and descending).
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+At the top of the page, add a search bar that will allow the user to search for products by name. The search should be case insensitive and should match partial words.
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+Add a button to navigate to the cart page.
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+ℹ️ Details
+The details page will display all the information about a product. It will also have a button to add the product to the cart (with a quantity input).
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+🛒 Cart
+Display a list of products added to the cart.
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+Add buttons to remove products from the cart and clear the cart. Add ➕ and ➖ buttons to increase and decrease the number of instances of a product in the cart. Display the total price of all products in the cart.
+
+Add recommendations of products to add to the cart. You can make these recommendations random (based on the category of the products in the cart), based on popularity, or gain some bonus points and use a more sophisticated algorithm (e.g., based on other users' purchases).
+
+⚙️ Admin
+Display a list of all the products in the store. Add buttons to edit, delete and add new products.
+
+The page should also display a list of suppliers. Add buttons to delete suppliers and add new ones.
+
+📈 Add analytics section to the page:
+
+📦 Total number of products in the store
+
+🛍️ Products that are about to run out of stock (less than 5 instances left)
+
+💵 Monthly revenue of the store (last 30 days)
+
+💰 Weekly most profitable category (last 7 days)
+
+🏆 Daily most profitable item (last 24 hours)
+
+📊 Items with the highest and lowest profit margin (all time)
+
+🌟 Supplier whose items brought the most profit (all time)
+
+💲 Amount of money spent for each supplier (all time)
+
+📌 Standards
+Keep in mind the Shop Rules when implementing your application.
+Validate all user input.
+Display appropriate success/error messages to the user (A nice library for this is react-toastify).
+Make sure your application is responsive.
+Make sure you are using typescript correctly:
+No any type.
+No ts-ignore.
+Use interfaces for your collections.
+Set the correct type for every variable, parameter, and return value.
+Use utility types when applicable.
+Use React Router to navigate between pages.
+Use Redux to manage the state of your application.
+Use useQuery to fetch data from the server.
+Use Functional components and Hooks.
+You can use Material UI or other UI libraries to style your application.
+Make sure to break your application into components
+A component should only be responsible for one thing
+If you component's TSX code is larger than your screen, it is probably doing too much, break it into smaller components
+📃 Instructions
+Initialize a new vite project with npm create vite midterm-client-side --template react-ts
+Start by implementing the basic Routing and Redux setup.
+Create the UI pages and components, and display dummy data (Create the dummy data in the client-side code).
+Connect the UI to the server using useQuery and display the real data.
+Test your application and make sure it works as expected. Fix any bugs you find.
