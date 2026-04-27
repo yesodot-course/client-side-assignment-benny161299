@@ -1,15 +1,23 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useOrders } from '../../hooks/useOrders';
+import { useItems } from '../../hooks/useItems';
+import type { IItem } from '../../interfaces';
 import styles from '../../pages/AdminPage.module.css';
+import orderStyles from './OrdersTab.module.css';
 
 /**
- * OrdersTab — displays all orders in the system.
- * Each row is expandable to show the items in the order.
+ * OrdersTab — displays all orders newest-first.
+ * Each order is expandable to show its items with full product details
+ * (name, supplier, category, description, image) resolved from the local cache.
  */
 export default function OrdersTab() {
-  const { data: orders = [], isLoading, isError } = useOrders();
+  const { data: orders = [], isLoading: loadingOrders, isError: errorOrders } = useOrders();
+  const { data: allItems = [] } = useItems();
   const [expandedId, setExpandedId] = useState<string | null>(null);
+
+  // Build a lookup map: itemId -> IItem (O(1) access)
+  const itemMap = new Map<string, IItem>(allItems.map((i) => [i._id, i]));
 
   const formatted = (dateStr: string) =>
     new Date(dateStr).toLocaleString('he-IL', {
@@ -27,10 +35,10 @@ export default function OrdersTab() {
         <span className={styles.countLabel}>{orders.length} הזמנות</span>
       </div>
 
-      {isLoading && <p className={styles.info}>⏳ טוען הזמנות...</p>}
-      {isError   && <p className={styles.errorMsg}>❌ שגיאה בטעינת הזמנות. וודא שהשרת פועל.</p>}
+      {loadingOrders && <p className={styles.info}>⏳ טוען הזמנות...</p>}
+      {errorOrders   && <p className={styles.errorMsg}>❌ שגיאה בטעינת הזמנות. וודא שהשרת פועל.</p>}
 
-      {!isLoading && orders.length === 0 && (
+      {!loadingOrders && orders.length === 0 && (
         <p className={styles.info}>אין הזמנות עדיין.</p>
       )}
 
@@ -73,34 +81,53 @@ export default function OrdersTab() {
                     {order.items.length === 0 ? (
                       <p className={styles.info}>אין פריטים בהזמנה</p>
                     ) : (
-                      <table className={styles.table}>
-                        <thead>
-                          <tr>
-                            <th>#</th>
-                            <th>פריט</th>
-                            <th>כמות</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {order.items.map((item, idx) => (
-                            <tr key={`${item.itemId}-${idx}`}>
-                              <td>{idx + 1}</td>
-                              <td className={styles.minPrice}>
+                      <div className={orderStyles.itemsList}>
+                        {order.items.map((orderItem, idx) => {
+                          const item = itemMap.get(orderItem.itemId);
+                          return (
+                            <div key={`${orderItem.itemId}-${idx}`} className={orderStyles.itemCard}>
+                              {/* Thumbnail */}
+                              <div className={orderStyles.thumb}>
+                                {item?.image ? (
+                                  <img src={item.image} alt={item.name} className={orderStyles.thumbImg} />
+                                ) : (
+                                  <div className={orderStyles.thumbPlaceholder}>📦</div>
+                                )}
+                              </div>
+
+                              {/* Details */}
+                              <div className={orderStyles.itemDetails}>
                                 <Link
-                                  to={`/items/${item.itemId}`}
+                                  to={`/items/${orderItem.itemId}`}
                                   target="_blank"
                                   rel="noopener noreferrer"
-                                  style={{ color: '#e94560', textDecoration: 'none' }}
-                                  title="פתח עמוד מוצר"
+                                  className={orderStyles.itemName}
                                 >
-                                  🔗 {item.itemId}
+                                  {item?.name ?? orderItem.itemId} 🔗
                                 </Link>
-                              </td>
-                              <td>{item.quantity}</td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
+
+                                <div className={orderStyles.meta}>
+                                  {item?.supplier && (
+                                    <span className={orderStyles.tag}>🏭 {
+                                      typeof item.supplier === 'object'
+                                        ? item.supplier.name
+                                        : item.supplier
+                                    }</span>
+                                  )}
+                                  {item?.category && (
+                                    <span className={orderStyles.tag}>🏷️ {item.category}</span>
+                                  )}
+                                  <span className={orderStyles.tag}>× {orderItem.quantity}</span>
+                                </div>
+
+                                {item?.description && (
+                                  <p className={orderStyles.desc}>{item.description}</p>
+                                )}
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
                     )}
                   </div>
                 )}
