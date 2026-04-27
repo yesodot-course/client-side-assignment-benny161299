@@ -1,14 +1,12 @@
 import { Component, type ReactNode } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import {
-  useMonthlyRevenue,
-  useWeeklyTopCategory,
-  useDailyTopItem,
-  useProfitMargins,
-  useTopSupplier,
-  useSupplierSpend,
-} from '../hooks/useAnalysis';
-import { useItems } from '../hooks/useItems';
+import { useTopSupplier } from '../hooks/useAnalysis';
+import { StatCard } from './analysis/statHelpers';
+import { shekel } from './analysis/analysisUtils';
+import InventoryStatsRow   from './analysis/InventoryStatsRow';
+import RevenueRow          from './analysis/RevenueRow';
+import ProfitMarginsRow    from './analysis/ProfitMarginsRow';
+import SupplierSpendTable  from './analysis/SupplierSpendTable';
 import styles from './AnalysisDashboard.module.css';
 
 // ─── Error Boundary ───────────────────────────────────────────────────────────
@@ -42,72 +40,10 @@ class AnalysisErrorBoundary extends Component<
   }
 }
 
-// ─── Shared helpers ───────────────────────────────────────────────────────────
-
-/** Format a number as ₪ currency string — safe against undefined */
-function shekel(n: number | null | undefined): string {
-  if (n == null || !isFinite(n)) return '—';
-  return `₪${n.toLocaleString('he-IL', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-}
-
-/** Format a number as percentage — safe against undefined */
-function pct(n: number | null | undefined): string {
-  if (n == null || !isFinite(n)) return '—';
-  return `${(n * 100).toFixed(1)}%`;
-}
-
-// ─── Skeleton card ────────────────────────────────────────────────────────────
-function SkeletonCard() {
-  return <div className={`${styles.card} ${styles.skeleton}`} aria-busy="true" />;
-}
-
-// ─── Stat Card ────────────────────────────────────────────────────────────────
-interface StatCardProps {
-  id: string;
-  icon: string;
-  label: string;
-  value: string;
-  subValue?: string;
-  accent?: 'green' | 'red' | 'purple' | 'blue' | 'gold';
-  loading?: boolean;
-  error?: boolean;
-}
-
-function StatCard({ id, icon, label, value, subValue, accent = 'purple', loading, error }: StatCardProps) {
-  if (loading) return <SkeletonCard />;
-  return (
-    <div className={`${styles.card} ${styles[accent]}`} id={id}>
-      <div className={styles.cardIcon}>{icon}</div>
-      <div className={styles.cardBody}>
-        <p className={styles.cardLabel}>{label}</p>
-        {error
-          ? <p className={styles.cardError}>— אין נתונים —</p>
-          : <p className={styles.cardValue}>{value}</p>
-        }
-        {!error && subValue && <p className={styles.cardSub}>{subValue}</p>}
-      </div>
-    </div>
-  );
-}
-
-// ══════════════════════════════════════════════════════════════════════════════
-// AnalysisDashboard (inner)
-// ══════════════════════════════════════════════════════════════════════════════
+// ─── Inner dashboard ─────────────────────────────────────────────────────────
 function AnalysisDashboardInner() {
-  const qc = useQueryClient();
-
-  const monthly       = useMonthlyRevenue();
-  const weeklyTopCat  = useWeeklyTopCategory();
-  const dailyTopItem  = useDailyTopItem();
-  const profitMargins = useProfitMargins();
-  const topSupplier   = useTopSupplier();
-  const supplierSpend = useSupplierSpend();
-
-  // Local inventory stats — computed from cached items (no extra fetch)
-  const { data: allItems = [] } = useItems();
-  const totalProducts  = allItems.length;
-  const lowStockItems  = allItems.filter((i) => i.stock > 0 && i.stock < 5);
-  const outOfStockItems = allItems.filter((i) => i.stock === 0);
+  const qc          = useQueryClient();
+  const topSupplier = useTopSupplier();
 
   const handleRefresh = () => {
     void qc.invalidateQueries({ queryKey: ['analysis'] });
@@ -132,146 +68,16 @@ function AnalysisDashboardInner() {
         </button>
       </div>
 
-      {/* ── Row 0: Inventory stats (local, no API) ────────────────────── */}
-      <div className={styles.sectionTitle}>מלאי החנות</div>
-      <div className={styles.row3}>
+      {/* Row 0 — local inventory stats */}
+      <InventoryStatsRow />
 
-        {/* Total products */}
-        <div className={`${styles.card} ${styles.purple}`} id="analysis-total-products">
-          <div className={styles.cardIcon}>📦</div>
-          <div className={styles.cardBody}>
-            <p className={styles.cardLabel}>סה״כ פריטים בחנות</p>
-            <p className={styles.cardValue}>{totalProducts}</p>
-            <p className={styles.cardSub}>פריטים ייחודיים</p>
-          </div>
-        </div>
+      {/* Row 1 — revenue, weekly category, daily item */}
+      <RevenueRow />
 
-        {/* Low stock */}
-        <div
-          className={`${styles.card} ${lowStockItems.length > 0 ? styles.gold : styles.green}`}
-          id="analysis-low-stock"
-        >
-          <div className={styles.cardIcon}>🛍️</div>
-          <div className={styles.cardBody}>
-            <p className={styles.cardLabel}>עומדים להיגמר (מלאי &lt; 5)</p>
-            <p className={styles.cardValue}>{lowStockItems.length}</p>
-            {lowStockItems.length > 0 && (
-              <ul className={styles.lowStockList}>
-                {lowStockItems.map((i) => (
-                  <li key={i._id} className={styles.lowStockItem}>
-                    <span>{i.name}</span>
-                    <span className={styles.lowStockBadge}>{i.stock} נשארו</span>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-        </div>
+      {/* Row 2 — profit margins */}
+      <ProfitMarginsRow />
 
-        {/* Out of stock */}
-        <div
-          className={`${styles.card} ${outOfStockItems.length > 0 ? styles.red : styles.green}`}
-          id="analysis-out-of-stock"
-        >
-          <div className={styles.cardIcon}>🚫</div>
-          <div className={styles.cardBody}>
-            <p className={styles.cardLabel}>אזל מהמלאי (stock = 0)</p>
-            <p className={styles.cardValue}>{outOfStockItems.length}</p>
-            {outOfStockItems.length > 0 && (
-              <ul className={styles.lowStockList}>
-                {outOfStockItems.map((i) => (
-                  <li key={i._id} className={styles.lowStockItem}>
-                    <span>{i.name}</span>
-                    <span className={styles.lowStockBadge + ' ' + styles.badgeOos}>אזל</span>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-        </div>
-
-      </div>
-
-      {/* ── Row 1: revenue + weekly category + daily item ─────────────────── */}
-      <div className={styles.row3}>
-
-        {/* Monthly Revenue */}
-        <StatCard
-          id="analysis-monthly-revenue"
-          icon="💰"
-          label="הכנסות החודש (30 יום)"
-          value={monthly.data ? shekel(monthly.data.revenue) : '—'}
-          accent="green"
-          loading={monthly.isLoading}
-          error={monthly.isError}
-        />
-
-        {/* Weekly Top Category */}
-        <StatCard
-          id="analysis-weekly-top-category"
-          icon="📊"
-          label="קטגוריה מובילה השבוע (7 יום)"
-          value={weeklyTopCat.data?.category ?? '—'}
-          subValue={weeklyTopCat.data ? `רווח: ${shekel(weeklyTopCat.data.profit)}` : undefined}
-          accent="blue"
-          loading={weeklyTopCat.isLoading}
-          error={weeklyTopCat.isError}
-        />
-
-        {/* Daily Top Item */}
-        <StatCard
-          id="analysis-daily-top-item"
-          icon="🏆"
-          label="פריט מוביל היום (24 שעות)"
-          value={dailyTopItem.data?.name ?? '—'}
-          subValue={dailyTopItem.data ? `רווח: ${shekel(dailyTopItem.data.profit)}` : undefined}
-          accent="gold"
-          loading={dailyTopItem.isLoading}
-          error={dailyTopItem.isError}
-        />
-      </div>
-
-      {/* ── Row 2: profit margins ─────────────────────────────────────────── */}
-      <div className={styles.sectionTitle}>מרווחי רווח (כל הזמנים)</div>
-      <div className={styles.row2}>
-
-        {/* Highest Margin */}
-        {profitMargins.isLoading ? (
-          <><SkeletonCard /><SkeletonCard /></>
-        ) : profitMargins.isError ? (
-          <div className={`${styles.card} ${styles.errorCard}`} id="analysis-profit-margins-error">
-            <p className={styles.cardError}>❌ שגיאה בטעינת מרווחי רווח</p>
-          </div>
-        ) : (
-          <>
-            <div className={`${styles.card} ${styles.green}`} id="analysis-highest-margin">
-              <div className={styles.cardIcon}>📈</div>
-              <div className={styles.cardBody}>
-                <p className={styles.cardLabel}>מרווח הרווח הגבוה ביותר</p>
-                <p className={styles.cardValue}>{profitMargins.data?.highest.name ?? '—'}</p>
-                <p className={styles.cardSub}>
-                  {profitMargins.data ? pct(profitMargins.data.highest.margin) : ''}
-                </p>
-              </div>
-              <div className={styles.marginBadge + ' ' + styles.badgeGreen}>↑ גבוה</div>
-            </div>
-
-            <div className={`${styles.card} ${styles.red}`} id="analysis-lowest-margin">
-              <div className={styles.cardIcon}>📉</div>
-              <div className={styles.cardBody}>
-                <p className={styles.cardLabel}>מרווח הרווח הנמוך ביותר</p>
-                <p className={styles.cardValue}>{profitMargins.data?.lowest.name ?? '—'}</p>
-                <p className={styles.cardSub}>
-                  {profitMargins.data ? pct(profitMargins.data.lowest.margin) : ''}
-                </p>
-              </div>
-              <div className={styles.marginBadge + ' ' + styles.badgeRed}>↓ נמוך</div>
-            </div>
-          </>
-        )}
-      </div>
-
-      {/* ── Row 3: top supplier ───────────────────────────────────────────── */}
+      {/* Top supplier */}
       <StatCard
         id="analysis-top-supplier"
         icon="🥇"
@@ -283,66 +89,9 @@ function AnalysisDashboardInner() {
         error={topSupplier.isError}
       />
 
-      {/* ── Supplier Spend Table ──────────────────────────────────────────── */}
-      <div className={styles.sectionTitle}>
-        הוצאות לפי ספק (כל הזמנים)
-        <span className={styles.sectionNote}>הזמנות + מלאי קיים, ממוין בסדר יורד</span>
-      </div>
+      {/* Supplier spend table */}
+      <SupplierSpendTable />
 
-      {supplierSpend.isLoading && (
-        <div className={styles.tableWrap}>
-          {[1, 2, 3].map((i) => (
-            <div key={i} className={`${styles.skeletonRow}`} />
-          ))}
-        </div>
-      )}
-
-      {supplierSpend.isError && (
-        <p className={styles.tableError}>❌ שגיאה בטעינת נתוני הוצאות</p>
-      )}
-
-      {!supplierSpend.isLoading && !supplierSpend.isError && supplierSpend.data && (
-        supplierSpend.data.length === 0 ? (
-          <p className={styles.emptyMsg}>אין נתוני הוצאות עדיין.</p>
-        ) : (
-          <div className={styles.tableWrap} id="analysis-supplier-spend-table">
-            <table className={styles.table}>
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>ספק</th>
-                  <th>סה״כ הוצאה</th>
-                  <th>נתח יחסי</th>
-                </tr>
-              </thead>
-              <tbody>
-                {supplierSpend.data.map((row, idx) => {
-                  const total = supplierSpend.data!.reduce((s, r) => s + r.totalSpent, 0);
-                  const share = total > 0 ? row.totalSpent / total : 0;
-                  return (
-                    <tr key={row.supplierId} id={`analysis-spend-row-${row.supplierId}`}>
-                      <td className={styles.rank}>
-                        {idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : idx + 1}
-                      </td>
-                      <td className={styles.supplierName}>{row.name}</td>
-                      <td className={styles.amount}>{shekel(row.totalSpent)}</td>
-                      <td className={styles.shareCell}>
-                        <div className={styles.shareBar}>
-                          <div
-                            className={styles.shareFill}
-                            style={{ width: `${(share * 100).toFixed(1)}%` }}
-                          />
-                        </div>
-                        <span className={styles.shareLabel}>{pct(share)}</span>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-        )
-      )}
     </section>
   );
 }
