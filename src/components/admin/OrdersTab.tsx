@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useOrders } from '../../hooks/useOrders';
 import styles from '../../pages/AdminPage.module.css';
 
@@ -76,7 +77,7 @@ export default function OrdersTab() {
                         <thead>
                           <tr>
                             <th>#</th>
-                            <th>מזהה פריט</th>
+                            <th>פריט</th>
                             <th>כמות</th>
                           </tr>
                         </thead>
@@ -84,7 +85,17 @@ export default function OrdersTab() {
                           {order.items.map((item, idx) => (
                             <tr key={`${item.itemId}-${idx}`}>
                               <td>{idx + 1}</td>
-                              <td className={styles.minPrice}>{item.itemId}</td>
+                              <td className={styles.minPrice}>
+                                <Link
+                                  to={`/items/${item.itemId}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  style={{ color: '#e94560', textDecoration: 'none' }}
+                                  title="פתח עמוד מוצר"
+                                >
+                                  🔗 {item.itemId}
+                                </Link>
+                              </td>
                               <td>{item.quantity}</td>
                             </tr>
                           ))}
