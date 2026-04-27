@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import type { IItem, ISupplier } from '../interfaces';
+import { uploadToImgbb } from '../utils/imgbb';
 import styles from './ItemForm.module.css';
 
 interface Props {
@@ -21,23 +22,43 @@ export interface ItemFormData {
 }
 
 export default function ItemForm({ suppliers, initial, onSubmit, onClose, isPending }: Props) {
-  const [name, setName] = useState(initial?.name ?? '');
-  const [price, setPrice] = useState(initial?.price?.toString() ?? '');
-  const [stock, setStock] = useState(initial?.stock?.toString() ?? '');
-  const [category, setCategory] = useState(initial?.category ?? '');
+  const [name, setName]             = useState(initial?.name ?? '');
+  const [price, setPrice]           = useState(initial?.price?.toString() ?? '');
+  const [stock, setStock]           = useState(initial?.stock?.toString() ?? '');
+  const [category, setCategory]     = useState(initial?.category ?? '');
   const [supplierId, setSupplierId] = useState(
     initial?.supplier ? (typeof initial.supplier === 'object' ? initial.supplier._id : initial.supplier) : ''
   );
-  const [image, setImage] = useState(initial?.image ?? '');
+  const [image, setImage]           = useState(initial?.image ?? '');
   const [description, setDescription] = useState(initial?.description ?? '');
+  const [uploading, setUploading]   = useState(false);
+  const [uploadError, setUploadError] = useState('');
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // when supplier changes reset name to first matching supplierItem (UX hint)
   const selectedSupplier = suppliers.find((s) => s._id === supplierId);
   const supplierItemNames = selectedSupplier?.items.map((i) => i.itemName) ?? [];
 
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    setUploadError('');
+    try {
+      const result = await uploadToImgbb(file);
+      setImage(result.url);
+    } catch (err) {
+      setUploadError(err instanceof Error ? err.message : 'שגיאה בהעלאת התמונה');
+    } finally {
+      setUploading(false);
+      // reset so same file can be re-selected
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    }
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (uploading) return;
     onSubmit({
       name: name.trim(),
       price: Number(price),
@@ -163,16 +184,50 @@ export default function ItemForm({ suppliers, initial, onSubmit, onClose, isPend
             />
           </div>
 
-          {/* Image URL (optional) */}
+          {/* Image — URL input OR file upload */}
           <div className={styles.field}>
-            <label htmlFor="item-form-image">קישור לתמונה (אופציונלי)</label>
-            <input
-              id="item-form-image"
-              type="text"
-              value={image}
-              onChange={(e) => setImage(e.target.value)}
-              placeholder="https://..."
-            />
+            <label>קישור לתמונה (אופציונלי)</label>
+
+            <div className={styles.imageRow}>
+              <input
+                id="item-form-image"
+                type="text"
+                value={image}
+                onChange={(e) => { setImage(e.target.value); setUploadError(''); }}
+                placeholder="https://... או העלה קובץ ←"
+                className={styles.imageUrlInput}
+              />
+              <button
+                type="button"
+                className={styles.uploadBtn}
+                onClick={() => fileInputRef.current?.click()}
+                disabled={uploading}
+                title="העלאת תמונה מהמחשב"
+              >
+                {uploading ? '⏳' : '📁 העלה'}
+              </button>
+              {/* Hidden file input */}
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                style={{ display: 'none' }}
+                onChange={handleFileChange}
+              />
+            </div>
+
+            {uploadError && <span className={styles.errorHint}>{uploadError}</span>}
+            {uploading  && <p className={styles.hint}>⏳ מעלה לענן...</p>}
+
+            {/* Preview */}
+            {image && !uploading && (
+              <img
+                src={image}
+                alt="תצוגה מקדימה"
+                className={styles.imagePreview}
+                onError={(e) => (e.currentTarget.style.display = 'none')}
+              />
+            )}
           </div>
 
           {/* Description (optional) */}
@@ -194,7 +249,7 @@ export default function ItemForm({ suppliers, initial, onSubmit, onClose, isPend
             <button
               type="submit"
               className={styles.submitBtn}
-              disabled={isPending || !supplierId || !name || !price || !stock || !category}
+              disabled={isPending || uploading || !supplierId || !name || !price || !stock || !category}
             >
               {isPending ? 'שומר...' : isEdit ? '💾 שמור שינויים' : '✅ צור פריט'}
             </button>
