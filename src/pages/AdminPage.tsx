@@ -1,15 +1,16 @@
 import { useState } from 'react';
-import Navbar           from '../components/Navbar';
-import ItemsTab         from '../components/admin/ItemsTab';
-import SuppliersTab     from '../components/admin/SuppliersTab';
+import Navbar            from '../components/Navbar';
+import ItemsTab          from '../components/admin/ItemsTab';
+import SuppliersTab      from '../components/admin/SuppliersTab';
+import OrdersTab         from '../components/admin/OrdersTab';
 import AnalysisDashboard from '../components/AnalysisDashboard';
 import styles from './AdminPage.module.css';
 
-type Tab = 'items' | 'suppliers' | 'analysis';
+type Tab = 'items' | 'suppliers' | 'orders' | 'analysis';
 
 /**
  * AdminPage — root page for the admin interface.
- * Renders three tabs: Items, Suppliers, and Analytics.
+ * Renders four tabs: Items, Suppliers, Orders, and Analytics.
  * Each tab is a focused, self-contained component.
  */
 export default function AdminPage() {
@@ -21,7 +22,7 @@ export default function AdminPage() {
       <main className={styles.main}>
         <header className={styles.pageHeader}>
           <h1 className={styles.pageTitle}>⚙️ ממשק ניהול</h1>
-          <p className={styles.pageSubtitle}>ניהול מוצרים, ספקים ואנליטיקה</p>
+          <p className={styles.pageSubtitle}>ניהול מוצרים, ספקים, הזמנות ואנליטיקה</p>
         </header>
 
         {/* Tab navigation */}
@@ -45,6 +46,15 @@ export default function AdminPage() {
             🏭 ספקים
           </button>
           <button
+            id="admin-tab-orders"
+            role="tab"
+            aria-selected={activeTab === 'orders'}
+            className={`${styles.tab} ${activeTab === 'orders' ? styles.tabActive : ''}`}
+            onClick={() => setActiveTab('orders')}
+          >
+            🛒 הזמנות
+          </button>
+          <button
             id="admin-tab-analysis"
             role="tab"
             aria-selected={activeTab === 'analysis'}
@@ -58,6 +68,7 @@ export default function AdminPage() {
         {/* Tab content */}
         {activeTab === 'items'     && <ItemsTab />}
         {activeTab === 'suppliers' && <SuppliersTab />}
+        {activeTab === 'orders'    && <OrdersTab />}
         {activeTab === 'analysis'  && <AnalysisDashboard />}
       </main>
     </>
