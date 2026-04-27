@@ -21,14 +21,14 @@ export interface ItemFormData {
 }
 
 export default function ItemForm({ suppliers, initial, onSubmit, onClose, isPending }: Props) {
-  const [name, setName]             = useState(initial?.name ?? '');
-  const [price, setPrice]           = useState(initial?.price?.toString() ?? '');
-  const [stock, setStock]           = useState(initial?.stock?.toString() ?? '');
-  const [category, setCategory]     = useState(initial?.category ?? '');
+  const [name, setName] = useState(initial?.name ?? '');
+  const [price, setPrice] = useState(initial?.price?.toString() ?? '');
+  const [stock, setStock] = useState(initial?.stock?.toString() ?? '');
+  const [category, setCategory] = useState(initial?.category ?? '');
   const [supplierId, setSupplierId] = useState(
     initial?.supplier ? (typeof initial.supplier === 'object' ? initial.supplier._id : initial.supplier) : ''
   );
-  const [image, setImage]           = useState(initial?.image ?? '');
+  const [image, setImage] = useState(initial?.image ?? '');
   const [description, setDescription] = useState(initial?.description ?? '');
 
   // when supplier changes reset name to first matching supplierItem (UX hint)
@@ -168,7 +168,7 @@ export default function ItemForm({ suppliers, initial, onSubmit, onClose, isPend
             <label htmlFor="item-form-image">קישור לתמונה (אופציונלי)</label>
             <input
               id="item-form-image"
-              type="url"
+              type="text"
               value={image}
               onChange={(e) => setImage(e.target.value)}
               placeholder="https://..."
