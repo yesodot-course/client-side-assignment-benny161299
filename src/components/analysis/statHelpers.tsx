@@ -11,12 +11,12 @@ export interface StatCardProps {
   error?: boolean;
 }
 
-/** Placeholder card shown while data is loading. */
+
 export function SkeletonCard() {
   return <div className={`${styles.card} ${styles.skeleton}`} aria-busy="true" />;
 }
 
-/** Generic stat card used throughout the analytics dashboard. */
+
 export function StatCard({
   id, icon, label, value, subValue, accent = 'purple', loading, error,
 }: StatCardProps) {

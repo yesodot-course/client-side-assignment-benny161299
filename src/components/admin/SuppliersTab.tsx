@@ -12,10 +12,7 @@ import {
 import type { ISupplier } from '../../interfaces';
 import styles from '../../pages/AdminPage.module.css';
 
-/**
- * SuppliersTab — displays all suppliers as expandable cards.
- * Handles create, delete, add-item, and remove-item operations.
- */
+
 export default function SuppliersTab() {
   const { data: suppliers = [], isLoading, isError } = useSuppliers();
   const { mutateAsync: createSupplier,         isPending: creating    } = useCreateSupplier();
@@ -78,7 +75,7 @@ export default function SuppliersTab() {
 
   return (
     <section className={styles.tabContent}>
-      {/* Toolbar */}
+    
       <div className={styles.toolbar}>
         <span className={styles.countLabel}>{suppliers.length} ספקים</span>
         <button
@@ -97,13 +94,13 @@ export default function SuppliersTab() {
         <p className={styles.info}>לא נמצאו ספקים.</p>
       )}
 
-      {/* Supplier cards */}
+  
       <div className={styles.supplierGrid}>
         {suppliers.map((sup) => {
           const expanded = expandedId === sup._id;
           return (
             <div key={sup._id} className={styles.supplierCard} id={`admin-supplier-${sup._id}`}>
-              {/* Header */}
+         
               <div className={styles.supplierHeader}>
                 <div className={styles.supplierMeta}>
                   <span className={styles.supplierName}>{sup.name}</span>
@@ -137,7 +134,7 @@ export default function SuppliersTab() {
                 </div>
               </div>
 
-              {/* Expanded catalog items */}
+         
               {expanded && (
                 <div className={styles.supplierItems}>
                   {sup.items.length === 0 ? (
@@ -183,7 +180,7 @@ export default function SuppliersTab() {
         })}
       </div>
 
-      {/* Modals */}
+
       {showCreateForm && (
         <SupplierForm
           mode="create"

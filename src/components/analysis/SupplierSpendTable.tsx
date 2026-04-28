@@ -2,10 +2,7 @@ import { useSupplierSpend } from '../../hooks/useAnalysis';
 import { shekel, pct } from './analysisUtils';
 import styles from '../AnalysisDashboard.module.css';
 
-/**
- * SupplierSpendTable — ranked table of total spending per supplier
- * (orders + current stock), sorted descending, with relative share bars.
- */
+
 export default function SupplierSpendTable() {
   const supplierSpend = useSupplierSpend();
 

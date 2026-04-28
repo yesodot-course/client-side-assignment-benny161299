@@ -2,7 +2,7 @@ import { useState } from 'react';
 import type { ISupplier } from '../interfaces';
 import styles from './SupplierForm.module.css';
 
-// ─── Create supplier modal ────────────────────────────────────────────────────
+
 interface CreateProps {
   mode: 'create';
   onSubmit: (name: string) => void;
@@ -10,7 +10,7 @@ interface CreateProps {
   isPending: boolean;
 }
 
-// ─── Add item to supplier modal ───────────────────────────────────────────────
+
 interface AddItemProps {
   mode: 'add-item';
   supplier: ISupplier;
@@ -24,10 +24,10 @@ type Props = CreateProps | AddItemProps;
 export default function SupplierForm(props: Props) {
   const { onClose, isPending } = props;
 
-  // ── Create supplier state ──
+
   const [newName, setNewName] = useState('');
 
-  // ── Add item state ──
+
   const [itemName, setItemName] = useState('');
   const [supplierPrice, setSupplierPrice] = useState('');
 

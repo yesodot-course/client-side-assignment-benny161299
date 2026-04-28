@@ -12,10 +12,7 @@ import { useSuppliers } from '../../hooks/useSuppliers';
 import type { IItem } from '../../interfaces';
 import styles from '../../pages/AdminPage.module.css';
 
-/**
- * ItemsTab — displays all store items in a searchable table.
- * Handles create, edit, and delete operations via modals and confirm dialogs.
- */
+
 export default function ItemsTab() {
   const { data: items = [], isLoading, isError } = useItems();
   const { data: suppliers = [] } = useSuppliers();
@@ -81,7 +78,7 @@ export default function ItemsTab() {
 
   return (
     <section className={styles.tabContent}>
-      {/* Toolbar */}
+    
       <div className={styles.toolbar}>
         <input
           id="admin-items-search"
@@ -107,7 +104,7 @@ export default function ItemsTab() {
         <p className={styles.info}>לא נמצאו פריטים.</p>
       )}
 
-      {/* Table */}
+   
       {filtered.length > 0 && (
         <div className={styles.tableWrap}>
           <table className={styles.table}>
@@ -170,7 +167,7 @@ export default function ItemsTab() {
         </div>
       )}
 
-      {/* Modals */}
+  
       {showForm && (
         <ItemForm
           suppliers={suppliers}

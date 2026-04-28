@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import type { ICartItem, IItem } from '../interfaces';
 
-// ─── Business Rules (validated server-side too, but guard client-side first) ──
+
 const MAX_UNIQUE_ITEMS = 10;
 const MAX_TOTAL_QUANTITY = 50;
 
@@ -27,17 +27,16 @@ const cartSlice = createSlice({
       const currentTotal = state.items.reduce((sum, ci) => sum + ci.quantity, 0);
       const newQty = (existing?.quantity ?? 0) + quantity;
 
-      // Guard: stock
       if (newQty > item.stock) {
         state.error = `לא ניתן להוסיף ${quantity} יחידות — נשאר רק ${item.stock} במלאי`;
         return;
       }
-      // Guard: max total quantity
+      
       if (currentTotal + quantity > MAX_TOTAL_QUANTITY) {
         state.error = `לא ניתן להזמין יותר מ-${MAX_TOTAL_QUANTITY} פריטים סה"כ`;
         return;
       }
-      // Guard: max unique items
+     
       if (!existing && state.items.length >= MAX_UNIQUE_ITEMS) {
         state.error = `לא ניתן להוסיף יותר מ-${MAX_UNIQUE_ITEMS} פריטים שונים לעגלה`;
         return;

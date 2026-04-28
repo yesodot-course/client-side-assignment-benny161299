@@ -8,11 +8,7 @@ import styles from './AdminPage.module.css';
 
 type Tab = 'items' | 'suppliers' | 'orders' | 'analysis';
 
-/**
- * AdminPage — root page for the admin interface.
- * Renders four tabs: Items, Suppliers, Orders, and Analytics.
- * Each tab is a focused, self-contained component.
- */
+
 export default function AdminPage() {
   const [activeTab, setActiveTab] = useState<Tab>('items');
 

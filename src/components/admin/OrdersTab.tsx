@@ -6,17 +6,13 @@ import type { IItem } from '../../interfaces';
 import styles from '../../pages/AdminPage.module.css';
 import orderStyles from './OrdersTab.module.css';
 
-/**
- * OrdersTab — displays all orders newest-first.
- * Each order is expandable to show its items with full product details
- * (name, supplier, category, description, image) resolved from the local cache.
- */
+
 export default function OrdersTab() {
   const { data: orders = [], isLoading: loadingOrders, isError: errorOrders } = useOrders();
   const { data: allItems = [] } = useItems();
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
-  // Build a lookup map: itemId -> IItem (O(1) access)
+
   const itemMap = new Map<string, IItem>(allItems.map((i) => [i._id, i]));
 
   const formatted = (dateStr: string) =>
@@ -42,7 +38,7 @@ export default function OrdersTab() {
         <p className={styles.info}>אין הזמנות עדיין.</p>
       )}
 
-      {/* Orders list */}
+  
       {orders.length > 0 && (
         <div className={styles.supplierGrid}>
           {[...orders].reverse().map((order) => {
@@ -53,7 +49,7 @@ export default function OrdersTab() {
                 className={styles.supplierCard}
                 id={`admin-order-${order._id}`}
               >
-                {/* Header row */}
+    
                 <div className={styles.supplierHeader}>
                   <div className={styles.supplierMeta}>
                     <span className={styles.supplierName}>
@@ -75,7 +71,7 @@ export default function OrdersTab() {
                   </div>
                 </div>
 
-                {/* Expanded items */}
+           
                 {expanded && (
                   <div className={styles.supplierItems}>
                     {order.items.length === 0 ? (
@@ -86,7 +82,7 @@ export default function OrdersTab() {
                           const item = itemMap.get(orderItem.itemId);
                           return (
                             <div key={`${orderItem.itemId}-${idx}`} className={orderStyles.itemCard}>
-                              {/* Thumbnail */}
+                          
                               <div className={orderStyles.thumb}>
                                 {item?.image ? (
                                   <img src={item.image} alt={item.name} className={orderStyles.thumbImg} />
@@ -95,7 +91,7 @@ export default function OrdersTab() {
                                 )}
                               </div>
 
-                              {/* Details */}
+                          
                               <div className={orderStyles.itemDetails}>
                                 <Link
                                   to={`/items/${orderItem.itemId}`}

@@ -3,10 +3,7 @@ import { SkeletonCard } from './statHelpers';
 import { pct } from './analysisUtils';
 import styles from '../AnalysisDashboard.module.css';
 
-/**
- * ProfitMarginsRow — two side-by-side cards showing the item with the
- * highest and lowest profit margin (all time).
- */
+
 export default function ProfitMarginsRow() {
   const profitMargins = useProfitMargins();
 

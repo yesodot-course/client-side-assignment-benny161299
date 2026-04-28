@@ -3,10 +3,7 @@ import { StatCard } from './statHelpers';
 import { shekel } from './analysisUtils';
 import styles from '../AnalysisDashboard.module.css';
 
-/**
- * RevenueRow — three stat cards in one row:
- * monthly revenue, weekly top category, and daily top item.
- */
+
 export default function RevenueRow() {
   const monthly      = useMonthlyRevenue();
   const weeklyTopCat = useWeeklyTopCategory();

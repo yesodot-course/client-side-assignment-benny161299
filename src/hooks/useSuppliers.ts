@@ -28,7 +28,7 @@ export const useDeleteSupplier = () => {
     mutationFn: deleteSupplier,
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['suppliers'] });
-      qc.invalidateQueries({ queryKey: ['items'] }); // cascade delete מהשרת
+      qc.invalidateQueries({ queryKey: ['items'] }); 
     },
   });
 };

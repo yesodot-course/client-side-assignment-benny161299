@@ -1,4 +1,4 @@
-/* ─── Items list inside an expanded order ─────────────────────────────────── */
+
 .itemsList {
   display: flex;
   flex-direction: column;
@@ -19,7 +19,7 @@
 }
 .itemCard:hover { background: rgba(255, 255, 255, 0.06); }
 
-/* Thumbnail */
+
 .thumb {
   flex-shrink: 0;
   width: 64px;
@@ -46,7 +46,7 @@
   border: 1px solid rgba(255, 255, 255, 0.07);
 }
 
-/* Details column */
+
 .itemDetails {
   flex: 1;
   display: flex;
@@ -66,7 +66,7 @@
 }
 .itemName:hover { text-decoration: underline; }
 
-/* Tag row */
+
 .meta {
   display: flex;
   flex-wrap: wrap;
@@ -83,7 +83,7 @@
   white-space: nowrap;
 }
 
-/* Description */
+
 .desc {
   font-size: 0.8rem;
   color: #6b7280;

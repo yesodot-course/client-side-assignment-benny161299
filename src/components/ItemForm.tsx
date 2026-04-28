@@ -16,7 +16,7 @@ export interface ItemFormData {
   price: number;
   stock: number;
   category: string;
-  supplier: string;      // supplier _id
+  supplier: string;    
   image: string;
   description: string;
 }
@@ -35,7 +35,7 @@ export default function ItemForm({ suppliers, initial, onSubmit, onClose, isPend
   const [uploadError, setUploadError] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // when supplier changes reset name to first matching supplierItem (UX hint)
+  
   const selectedSupplier = suppliers.find((s) => s._id === supplierId);
   const supplierItemNames = selectedSupplier?.items.map((i) => i.itemName) ?? [];
 
@@ -51,7 +51,7 @@ export default function ItemForm({ suppliers, initial, onSubmit, onClose, isPend
       setUploadError(err instanceof Error ? err.message : 'שגיאה בהעלאת התמונה');
     } finally {
       setUploading(false);
-      // reset so same file can be re-selected
+
       if (fileInputRef.current) fileInputRef.current.value = '';
     }
   };
@@ -88,11 +88,11 @@ export default function ItemForm({ suppliers, initial, onSubmit, onClose, isPend
               value={supplierId}
               onChange={(e) => {
                 setSupplierId(e.target.value);
-                // Reset name when supplier changes in create-mode
+             
                 if (!isEdit) setName('');
               }}
               required
-              disabled={isEdit}   // cannot change supplier on edit
+              disabled={isEdit}   
             >
               <option value="">— בחר ספק —</option>
               {suppliers.map((s) => (

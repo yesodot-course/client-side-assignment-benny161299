@@ -14,7 +14,7 @@ export default function HomePage() {
   const [filteredItems, setFilteredItems] = useState<IItem[]>([]);
   const [filterActive, setFilterActive] = useState(false);
 
-  // debounce search
+
   useEffect(() => {
     const t = setTimeout(() => setDebouncedSearch(searchTerm.trim()), 350);
     return () => clearTimeout(t);
@@ -26,7 +26,7 @@ export default function HomePage() {
     debouncedSearch ? { name: debouncedSearch } : {}
   );
 
-  // displayed list: search overrides filter
+
   const displayedItems = debouncedSearch
     ? (searchResults ?? [])
     : filterActive

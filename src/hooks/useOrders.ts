@@ -11,7 +11,7 @@ export const useCreateOrder = () => {
   return useMutation({
     mutationFn: (payload: CreateOrderPayload) => createOrder(payload),
     onSuccess: () => {
-      // Stock counts change after an order — refresh both item lists and analytics
+   
       qc.invalidateQueries({ queryKey: ['items'] });
       qc.invalidateQueries({ queryKey: ['analysis'] });
     },

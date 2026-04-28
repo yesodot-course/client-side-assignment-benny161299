@@ -6,7 +6,7 @@ interface Props {
   onCancel: () => void;
 }
 
-/** Reusable confirm/danger dialog for destructive actions in the Admin page. */
+
 export default function ConfirmDialog({ message, onConfirm, onCancel }: Props) {
   return (
     <div className={styles.overlay} onClick={(e) => e.target === e.currentTarget && onCancel()}>

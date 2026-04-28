@@ -9,7 +9,7 @@ import ProfitMarginsRow    from './analysis/ProfitMarginsRow';
 import SupplierSpendTable  from './analysis/SupplierSpendTable';
 import styles from './AnalysisDashboard.module.css';
 
-// ─── Error Boundary ───────────────────────────────────────────────────────────
+
 class AnalysisErrorBoundary extends Component<
   { children: ReactNode },
   { hasError: boolean; message: string }
@@ -40,7 +40,7 @@ class AnalysisErrorBoundary extends Component<
   }
 }
 
-// ─── Inner dashboard ─────────────────────────────────────────────────────────
+
 function AnalysisDashboardInner() {
   const qc          = useQueryClient();
   const topSupplier = useTopSupplier();
@@ -96,7 +96,7 @@ function AnalysisDashboardInner() {
   );
 }
 
-// ── Exported wrapper with ErrorBoundary ───────────────────────────────────────
+
 export default function AnalysisDashboard() {
   return (
     <AnalysisErrorBoundary>

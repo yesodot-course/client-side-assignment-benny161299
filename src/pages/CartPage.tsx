@@ -9,12 +9,11 @@ import Navbar from '../components/Navbar';
 import type { ICartItem } from '../interfaces';
 import styles from './CartPage.module.css';
 
-// ─── Recommendations ────────────────────────────────────────────────────────────
+
 function Recommendations({ cartItems }: { cartItems: ICartItem[] }) {
   const { data: allItems = [] } = useItems();
 
-  // Deterministic shuffle seeded by cart item IDs — changes when cart changes,
-  // stays stable across re-renders (satisfies react-hooks/purity).
+
   const recs = useMemo(() => {
     const cartIds        = new Set(cartItems.map((ci) => ci.item._id));
     const cartCategories = new Set(cartItems.map((ci) => ci.item.category));
@@ -46,7 +45,7 @@ function Recommendations({ cartItems }: { cartItems: ICartItem[] }) {
   );
 }
 
-// ─── Main CartPage ───────────────────────────────────────────────────────────────
+
 export default function CartPage() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -61,14 +60,14 @@ export default function CartPage() {
       toast.error('נא להזין כתובת למשלוח');
       return;
     }
-    // Business-rule guards (also enforced server-side)
+    
     const uniqueCount = cartItems.length;
     const totalQty    = cartItems.reduce((s, ci) => s + ci.quantity, 0);
     if (uniqueCount > 10) { toast.error('מקסימום 10 פריטים שונים בהזמנה'); return; }
     if (totalQty    > 50) { toast.error('מקסימום 50 פריטים בסה"כ'); return; }
 
     try {
-      // shopProfit and orderDate are computed server-side — we only send items + address
+      
       await createOrder({
         items: cartItems.map((ci) => ({ itemId: ci.item._id, quantity: ci.quantity })),
         address,
