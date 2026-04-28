@@ -140,14 +140,21 @@
   border-bottom: 1px solid #1f2028;
   vertical-align: middle;
   text-align: right;
+  white-space: nowrap;       /* prevent any td from wrapping by default */
 }
 
 .table tbody tr:last-child td { border-bottom: none; }
 .table tbody tr:hover { background: rgba(255,255,255,0.03); }
 
-.nameCell { display: flex; flex-direction: column; gap: 0.2rem; }
-.itemName { color: #020c22; font-weight: 500; }
-.itemDesc { font-size: 0.8rem; color: #6b7280; }
+.nameCell {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  white-space: normal;       /* allow name+desc column to wrap */
+  min-width: 120px;
+}
+.itemName { color: #f3f4f6; font-weight: 500; }
+.itemDesc { font-size: 0.8rem; color: #6b7280; white-space: normal; }
 
 .thumb {
   width: 44px;
