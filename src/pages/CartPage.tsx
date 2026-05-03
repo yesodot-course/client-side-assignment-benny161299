@@ -56,8 +56,8 @@ export default function CartPage() {
   const total = cartItems.reduce((sum, ci) => sum + ci.item.price * ci.quantity, 0);
 
   const handleCheckout = async () => {
-    if (!address.trim()) {
-      toast.error('נא להזין כתובת למשלוח');
+    if (!address.trim() || address.trim().length < 5) {
+      toast.error('הכתובת חייבת להכיל לפחות 5 תווים');
       return;
     }
     
