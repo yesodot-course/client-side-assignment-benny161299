@@ -132,10 +132,15 @@ export default function CartPage() {
                 </div>
               ))}
 
-              <button id="cart-clear-btn" className={styles.clearBtn}
-                onClick={() => dispatch(clearCart())}>
-                🗑️ נקה עגלה
-              </button>
+              <div className={styles.listActions}>
+                <Link to="/" className={styles.continueShoppingBtn}>
+                  🛍️ המשך בקניות
+                </Link>
+                <button id="cart-clear-btn" className={styles.clearBtn}
+                  onClick={() => dispatch(clearCart())}>
+                  🗑️ נקה עגלה
+                </button>
+              </div>
             </section>
 
             {/* Summary + checkout */}

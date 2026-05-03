@@ -1,7 +1,7 @@
 .overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.65);
+  background: rgba(0, 0, 0, 0.6);
   backdrop-filter: blur(4px);
   z-index: 1000;
   display: flex;
@@ -17,8 +17,8 @@
 }
 
 .modal {
-  background: #1a1a2e;
-  border: 1px solid #2e303a;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
   border-radius: 16px;
   padding: 2rem;
   width: 100%;
@@ -26,7 +26,7 @@
   max-height: 90svh;
   overflow-y: auto;
   position: relative;
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
+  box-shadow: var(--shadow);
   animation: slideUp 0.2s ease;
   direction: rtl;
 }
@@ -42,19 +42,19 @@
   left: 1rem;
   background: transparent;
   border: none;
-  color: #9ca3af;
+  color: var(--text-muted);
   font-size: 1.2rem;
   cursor: pointer;
   padding: 0.25rem 0.5rem;
   border-radius: 6px;
-  transition: background 0.15s, color 0.15s;
+  transition: all 0.15s;
 }
-.closeBtn:hover { background: rgba(255,255,255,0.08); color: #f3f4f6; }
+.closeBtn:hover { background: var(--bg-inner); color: var(--text-primary); }
 
 .title {
   margin: 0 0 1.5rem;
   font-size: 1.3rem;
-  color: #f3f4f6;
+  color: var(--text-primary);
   font-weight: 600;
 }
 
@@ -74,20 +74,20 @@
 .field label {
   font-size: 0.85rem;
   font-weight: 500;
-  color: #a8b2d8;
+  color: var(--text-secondary);
 }
 
 .field input,
 .field select,
 .field textarea {
-  background: #0f0f1a;
-  border: 1px solid #2e303a;
+  background: var(--bg-inner);
+  border: 1px solid var(--border);
   border-radius: 8px;
   padding: 0.6rem 0.85rem;
-  color: #f3f4f6;
+  color: var(--text-primary);
   font-size: 0.95rem;
   font-family: inherit;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition: all 0.2s;
   direction: rtl;
   width: 100%;
   box-sizing: border-box;
@@ -97,8 +97,8 @@
 .field select:focus,
 .field textarea:focus {
   outline: none;
-  border-color: #e94560;
-  box-shadow: 0 0 0 3px rgba(233, 69, 96, 0.15);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-bg);
 }
 
 .field input:disabled,
@@ -113,12 +113,13 @@
 }
 
 .field select option {
-  background: #1a1a2e;
+  background: var(--bg-card);
+  color: var(--text-primary);
 }
 
 .hint {
   font-size: 0.78rem;
-  color: #6b7280;
+  color: var(--text-muted);
   direction: rtl;
 }
 
@@ -131,18 +132,18 @@
 
 .cancelBtn {
   background: transparent;
-  border: 1px solid #2e303a;
-  color: #9ca3af;
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
   padding: 0.6rem 1.4rem;
   border-radius: 8px;
   font-size: 0.95rem;
   cursor: pointer;
-  transition: background 0.15s, color 0.15s;
+  transition: all 0.15s;
 }
-.cancelBtn:hover { background: rgba(255,255,255,0.06); color: #f3f4f6; }
+.cancelBtn:hover { background: var(--bg-inner); color: var(--text-primary); }
 
 .submitBtn {
-  background: #e94560;
+  background: var(--accent);
   border: none;
   color: #fff;
   padding: 0.6rem 1.6rem;
@@ -150,7 +151,7 @@
   font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
-  transition: transform 0.15s, box-shadow 0.15s, opacity 0.15s;
+  transition: all 0.15s;
 }
 .submitBtn:hover:not(:disabled) {
   transform: translateY(-1px);
@@ -171,20 +172,20 @@
 
 .uploadBtn {
   flex-shrink: 0;
-  background: #16213e;
-  border: 1px solid #2e303a;
-  color: #a8b2d8;
+  background: var(--bg-inner);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
   padding: 0.6rem 0.9rem;
   border-radius: 8px;
   font-size: 0.85rem;
   cursor: pointer;
   white-space: nowrap;
-  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  transition: all 0.15s;
 }
 .uploadBtn:hover:not(:disabled) {
-  background: #1e2d50;
-  border-color: #e94560;
-  color: #fff;
+  background: var(--border);
+  border-color: var(--accent);
+  color: var(--text-primary);
 }
 .uploadBtn:disabled { opacity: 0.45; cursor: not-allowed; }
 
@@ -194,12 +195,12 @@
   max-height: 160px;
   object-fit: contain;
   border-radius: 8px;
-  border: 1px solid #2e303a;
-  background: #0f0f1a;
+  border: 1px solid var(--border);
+  background: var(--bg-inner);
 }
 
 .errorHint {
   font-size: 0.78rem;
-  color: #e94560;
+  color: var(--accent);
   direction: rtl;
 }

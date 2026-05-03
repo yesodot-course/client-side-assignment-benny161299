@@ -130,10 +130,12 @@ export default function ItemsTab() {
                     )}
                   </td>
                   <td className={styles.nameCell}>
-                    <span className={styles.itemName}>{item.name}</span>
-                    {item.description && (
-                      <span className={styles.itemDesc}>{item.description}</span>
-                    )}
+                    <div className={styles.nameWrapper}>
+                      <span className={styles.itemName}>{item.name}</span>
+                      {item.description && (
+                        <span className={styles.itemDesc}>{item.description}</span>
+                      )}
+                    </div>
                   </td>
                   <td><span className={styles.badge}>{item.category}</span></td>
                   <td>{typeof item.supplier === 'object' ? item.supplier.name : '—'}</td>
@@ -144,21 +146,23 @@ export default function ItemsTab() {
                     </span>
                   </td>
                   <td className={styles.actionsCell}>
-                    <button
-                      id={`admin-edit-item-${item._id}`}
-                      className={styles.editBtn}
-                      onClick={() => { setEditTarget(item); setShowForm(true); }}
-                    >
-                      ✏️
-                    </button>
-                    <button
-                      id={`admin-delete-item-${item._id}`}
-                      className={styles.deleteBtn}
-                      onClick={() => setDeleteTarget(item)}
-                      disabled={deleting}
-                    >
-                      🗑️
-                    </button>
+                    <div className={styles.actionsWrapper}>
+                      <button
+                        id={`admin-edit-item-${item._id}`}
+                        className={styles.editBtn}
+                        onClick={() => { setEditTarget(item); setShowForm(true); }}
+                      >
+                        ✏️
+                      </button>
+                      <button
+                        id={`admin-delete-item-${item._id}`}
+                        className={styles.deleteBtn}
+                        onClick={() => setDeleteTarget(item)}
+                        disabled={deleting}
+                      >
+                        🗑️
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}

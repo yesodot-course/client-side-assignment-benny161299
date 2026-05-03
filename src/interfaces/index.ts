@@ -33,7 +33,7 @@ export interface IItem {
 
 
 export interface IOrderItem {
-  itemId: string;
+  itemId: string | { _id: string; name: string; price: number; image?: string | null };
   quantity: number;
 }
 

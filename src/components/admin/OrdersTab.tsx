@@ -79,13 +79,22 @@ export default function OrdersTab() {
                     ) : (
                       <div className={orderStyles.itemsList}>
                         {order.items.map((orderItem, idx) => {
-                          const item = itemMap.get(orderItem.itemId);
+                          const itemId = typeof orderItem.itemId === 'object' 
+                            ? orderItem.itemId._id 
+                            : orderItem.itemId;
+                          
+                          const isPopulated = typeof orderItem.itemId === 'object';
+                          const itemFromMap = itemMap.get(itemId);
+                          const item = itemFromMap || (isPopulated ? (orderItem.itemId as any) : null);
+                          const itemName = typeof orderItem.itemId === 'object' ? orderItem.itemId.name : (itemFromMap?.name ?? itemId);
+                          const itemImage = typeof orderItem.itemId === 'object' ? orderItem.itemId.image : itemFromMap?.image;
+
                           return (
-                            <div key={`${orderItem.itemId}-${idx}`} className={orderStyles.itemCard}>
+                            <div key={`${itemId}-${idx}`} className={orderStyles.itemCard}>
                           
                               <div className={orderStyles.thumb}>
-                                {item?.image ? (
-                                  <img src={item.image} alt={item.name} className={orderStyles.thumbImg} />
+                                {itemImage ? (
+                                  <img src={itemImage} alt={itemName} className={orderStyles.thumbImg} />
                                 ) : (
                                   <div className={orderStyles.thumbPlaceholder}>📦</div>
                                 )}
@@ -94,12 +103,12 @@ export default function OrdersTab() {
                           
                               <div className={orderStyles.itemDetails}>
                                 <Link
-                                  to={`/items/${orderItem.itemId}`}
+                                  to={`/items/${itemId}`}
                                   target="_blank"
                                   rel="noopener noreferrer"
                                   className={orderStyles.itemName}
                                 >
-                                  {item?.name ?? orderItem.itemId} 🔗
+                                  {itemName} 🔗
                                 </Link>
 
                                 <div className={orderStyles.meta}>

@@ -3,33 +3,42 @@
   flex-wrap: wrap;
   gap: 0.6rem;
   padding: 1rem 2rem;
-  background: #0f3460;
-  border-bottom: 1px solid rgba(255,255,255,0.06);
+  background: var(--bg-inner);
+  border-bottom: 1px solid var(--border);
+  transition: background 0.3s, border-color 0.3s;
 }
 
 .bar select,
 .bar input {
-  background: #16213e;
-  border: 1px solid #334155;
-  color: #e2e8f0;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
   padding: 0.45rem 0.8rem;
   border-radius: 8px;
   font-size: 0.875rem;
   min-width: 130px;
   outline: none;
-  transition: border-color 0.2s;
+  transition: all 0.2s;
+  direction: rtl;
 }
 .bar select:focus,
-.bar input:focus { border-color: #e94560; }
+.bar input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent-bg);
+}
 
 .reset {
   background: transparent;
-  border: 1px solid #e94560;
-  color: #e94560;
+  border: 1px solid var(--accent);
+  color: var(--accent);
   padding: 0.45rem 1rem;
   border-radius: 8px;
   cursor: pointer;
   font-size: 0.875rem;
-  transition: background 0.2s, color 0.2s;
+  font-weight: 600;
+  transition: all 0.2s;
 }
-.reset:hover { background: #e94560; color: #fff; }
+.reset:hover {
+  background: var(--accent);
+  color: #fff;
+}
