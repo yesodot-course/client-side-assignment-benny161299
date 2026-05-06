@@ -1,9 +1,11 @@
 import { Link, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useAppSelector } from '../store/hooks';
 import { useTheme } from '../context/ThemeContext';
 import styles from './Navbar.module.css';
 
 export default function Navbar() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { theme, toggleTheme } = useTheme();
   const cartCount = useAppSelector((s) =>
@@ -17,7 +19,7 @@ export default function Navbar() {
         <button
           onClick={toggleTheme}
           className={styles.themeToggle}
-          title={theme === 'light' ? 'מצב כהה' : 'מצב בהיר'}
+          title={theme === 'light' ? t('navbar.dark_mode') : t('navbar.light_mode')}
         >
           {theme === 'light' ? '🌙' : '☀️'}
         </button>
@@ -28,7 +30,7 @@ export default function Navbar() {
           className={styles.cartBtn}
           onClick={() => navigate('/cart')}
         >
-          🛒 עגלה
+          🛒 {t('navbar.cart')}
           {cartCount > 0 && <span className={styles.badge}>{cartCount}</span>}
         </button>
       </div>

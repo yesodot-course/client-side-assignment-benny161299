@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useItem } from '../hooks/useItems';
 import { useAppDispatch } from '../store/hooks';
@@ -8,6 +9,7 @@ import Navbar from '../components/Navbar';
 import styles from './DetailsPage.module.css';
 
 export default function DetailsPage() {
+  const { t } = useTranslation();
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -18,7 +20,7 @@ export default function DetailsPage() {
   if (isLoading) return (
     <>
       <Navbar />
-      <div className={styles.center}><p>טוען מוצר...</p></div>
+      <div className={styles.center}><p>{t('details.loading')}</p></div>
     </>
   );
 
@@ -26,8 +28,8 @@ export default function DetailsPage() {
     <>
       <Navbar />
       <div className={styles.center}>
-        <p className={styles.error}>מוצר לא נמצא.</p>
-        <Link to="/" className={styles.backLink}>← חזרה לחנות</Link>
+        <p className={styles.error}>{t('details.not_found')}</p>
+        <Link to="/" className={styles.backLink}>{t('details.back')}</Link>
       </div>
     </>
   );
@@ -37,7 +39,7 @@ export default function DetailsPage() {
 
   const handleAdd = () => {
     dispatch(addToCart({ item, quantity: qty }));
-    toast.success(`✅ ${item.name} נוסף לעגלה`);
+    toast.success(t('product.added_to_cart', { name: item.name }));
     navigate('/cart');
   };
 
@@ -45,7 +47,7 @@ export default function DetailsPage() {
     <>
       <Navbar />
       <main className={styles.main}>
-        <Link to="/" className={styles.backLink}>← חזרה לחנות</Link>
+        <Link to="/" className={styles.backLink}>{t('details.back')}</Link>
 
         <div className={styles.card}>
           {/* Image */}
@@ -63,7 +65,7 @@ export default function DetailsPage() {
 
             <div className={styles.tags}>
               <span className={styles.tag}>{item.category}</span>
-              <span className={styles.tag}>ספק: {supplierName}</span>
+              <span className={styles.tag}>{t('details.supplier', { name: supplierName })}</span>
             </div>
 
             {item.description && (
@@ -73,13 +75,13 @@ export default function DetailsPage() {
             <div className={styles.priceRow}>
               <span className={styles.price}>₪{item.price.toFixed(2)}</span>
               <span className={outOfStock ? styles.outOfStock : styles.inStock}>
-                {outOfStock ? '❌ אזל המלאי' : `✅ במלאי: ${item.stock}`}
+                {outOfStock ? t('details.out_of_stock') : t('details.in_stock', { count: item.stock })}
               </span>
             </div>
 
             {!outOfStock && (
               <div className={styles.addRow}>
-                <label htmlFor="detail-qty" className={styles.label}>כמות:</label>
+                <label htmlFor="detail-qty" className={styles.label}>{t('details.quantity')}</label>
                 <input
                   id="detail-qty"
                   type="number"
@@ -92,7 +94,7 @@ export default function DetailsPage() {
                   className={styles.qtyInput}
                 />
                 <button id="detail-add-btn" onClick={handleAdd} className={styles.addBtn}>
-                  🛒 הוסף לעגלה
+                  {t('details.add_to_cart')}
                 </button>
               </div>
             )}

@@ -1,0 +1,107 @@
+{
+  "common": {
+    "loading": "⏳ טוען...",
+    "error": "❌ שגיאה",
+    "save": "שמור",
+    "cancel": "ביטול",
+    "delete": "מחק",
+    "edit": "ערוך",
+    "search": "🔍 חפש...",
+    "no_results": "לא נמצאו תוצאות.",
+    "success": "✅ הצלחנו!"
+  },
+  "errors": {
+    "network_error": "שגיאת רשת",
+    "order_failed": "שגיאה בביצוע ההזמנה",
+    "item_not_found": "פריט לא נמצא",
+    "supplier_not_found": "ספק לא נמצא",
+    "saving_failed": "שגיאה בשמירה",
+    "deleting_failed": "שגיאה במחיקה",
+    "loading_failed": "שגיאה בטעינת הנתונים. וודא שהשרת פועל."
+  },
+  "navbar": {
+    "cart": "עגלה",
+    "admin": "ניהול",
+    "dark_mode": "מצב כהה",
+    "light_mode": "מצב בהיר"
+  },
+  "home": {
+    "search_placeholder": "🔍 חפש מוצר לפי שם...",
+    "results_for": "תוצאות עבור \"{{query}}\" ({{count}})",
+    "all_products": "כל המוצרים ({{count}})",
+    "loading_products": "טוען מוצרים...",
+    "no_products": "לא נמצאו מוצרים."
+  },
+  "details": {
+    "loading": "טוען מוצר...",
+    "not_found": "מוצר לא נמצא.",
+    "back": "← חזרה לחנות",
+    "supplier": "ספק: {{name}}",
+    "in_stock": "✅ במלאי: {{count}}",
+    "out_of_stock": "❌ אזל המלאי",
+    "quantity": "כמות:",
+    "add_to_cart": "🛒 הוסף לעגלה"
+  },
+  "cart": {
+    "title": "🛒 העגלה שלך",
+    "empty": "העגלה ריקה.",
+    "checkout": "✅ בצע הזמנה",
+    "processing": "מעבד...",
+    "address_placeholder": "כתובת למשלוח *",
+    "min_length_error": "הכתובת חייבת להכיל לפחות 5 תווים",
+    "order_success": "✅ ההזמנה בוצעה בהצלחה!",
+    "items_count": "פריטים ({{count}})",
+    "total": "סה\"כ",
+    "summary_title": "סיכום הזמנה",
+    "continue_shopping": "🛍️ המשך בקניות",
+    "clear_cart": "🗑️ נקה עגלה",
+    "max_unique_error": "מקסימום 10 פריטים שונים בהזמנה",
+    "max_total_error": "מקסימום 50 פריטים בסה\"כ",
+    "recommendations_title": "💡 אולי תאהב גם"
+  },
+  "admin": {
+    "title": "⚙️ ממשק ניהול",
+    "subtitle": "ניהול מוצרים, ספקים, הזמנות ואנליטיקה",
+    "tabs": {
+      "items": "📦 פריטים",
+      "suppliers": "🏭 ספקים",
+      "orders": "🛒 הזמנות",
+      "analysis": "📊 אנליטיקה"
+    },
+    "items": {
+      "search_placeholder": "🔍 חפש פריט...",
+      "new_btn": "➕ פריט חדש",
+      "loading": "⏳ טוען פריטים...",
+      "table": {
+        "image": "תמונה",
+        "name": "שם",
+        "category": "קטגוריה",
+        "supplier": "ספק",
+        "price": "מחיר ₪",
+        "stock": "מלאי",
+        "actions": "פעולות"
+      },
+      "confirm_delete": "האם למחוק את \"{{name}}\"?",
+      "update_success": "✅ הפריט עודכן בהצלחה",
+      "create_success": "✅ פריט חדש נוצר בהצלחה"
+    }
+  },
+  "filter": {
+    "all_categories": "כל הקטגוריות",
+    "all_suppliers": "כל הספקים",
+    "min_price": "מחיר מינימום",
+    "max_price": "מחיר מקסימום",
+    "sort": "מיון",
+    "price_asc": "מחיר ↑",
+    "price_desc": "מחיר ↓",
+    "name_asc": "שם A→Z",
+    "name_desc": "שם Z→A",
+    "reset": "נקה"
+  },
+  "product": {
+    "added_to_cart": "✅ {{name}} נוסף לעגלה",
+    "out_of_stock": "אזל המלאי",
+    "add": "הוסף",
+    "in_stock": "במלאי: {{count}}"
+  }
+}

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useItems } from '../hooks/useItems';
 import { useSuppliers } from '../hooks/useSuppliers';
 import { useSearchItems } from '../hooks/useItems';
+import { useTranslation } from 'react-i18next';
 import Navbar from '../components/Navbar';
 import ProductCard from '../components/ProductCard';
 import FilterBar from '../components/FilterBar';
@@ -9,6 +10,7 @@ import type { IItem } from '../interfaces';
 import styles from './HomePage.module.css';
 
 export default function HomePage() {
+  const { t } = useTranslation();
   const [searchTerm, setSearchTerm] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
   const [filteredItems, setFilteredItems] = useState<IItem[]>([]);
@@ -47,7 +49,7 @@ export default function HomePage() {
         <input
           id="home-search"
           type="text"
-          placeholder="🔍 חפש מוצר לפי שם..."
+          placeholder={t('home.search_placeholder')}
           value={searchTerm}
           onChange={(e) => { setSearchTerm(e.target.value); setFilterActive(false); }}
           className={styles.searchInput}
@@ -63,15 +65,15 @@ export default function HomePage() {
       <main className={styles.main}>
         <h1 className={styles.title}>
           {debouncedSearch
-            ? `תוצאות עבור "${debouncedSearch}" (${displayedItems.length})`
-            : `כל המוצרים (${displayedItems.length})`}
+            ? t('home.results_for', { query: debouncedSearch, count: displayedItems.length })
+            : t('home.all_products', { count: displayedItems.length })}
         </h1>
 
-        {loadingItems && <p className={styles.info}>טוען מוצרים...</p>}
-        {errorItems  && <p className={styles.error}>שגיאה בטעינת מוצרים. וודא שהשרת פועל.</p>}
+        {loadingItems && <p className={styles.info}>{t('home.loading_products')}</p>}
+        {errorItems  && <p className={styles.error}>{t('errors.loading_failed')}</p>}
 
         {!loadingItems && displayedItems.length === 0 && (
-          <p className={styles.info}>לא נמצאו מוצרים.</p>
+          <p className={styles.info}>{t('home.no_products')}</p>
         )}
 
         <div className={styles.grid}>

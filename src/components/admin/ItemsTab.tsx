@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 import ItemForm, { type ItemFormData } from '../ItemForm';
 import ConfirmDialog from './ConfirmDialog';
@@ -14,6 +15,7 @@ import styles from '../../pages/AdminPage.module.css';
 
 
 export default function ItemsTab() {
+  const { t } = useTranslation();
   const { data: items = [], isLoading, isError } = useItems();
   const { data: suppliers = [] } = useSuppliers();
   const { mutateAsync: createItem, isPending: creating } = useCreateItem();
@@ -44,7 +46,7 @@ export default function ItemsTab() {
             description: data.description || null,
           },
         });
-        toast.success('✅ הפריט עודכן בהצלחה');
+        toast.success(t('admin.items.update_success'));
       } else {
         await createItem({
           name:        data.name,
@@ -55,12 +57,12 @@ export default function ItemsTab() {
           image:       data.image       || null,
           description: data.description || null,
         });
-        toast.success('✅ פריט חדש נוצר בהצלחה');
+        toast.success(t('admin.items.create_success'));
       }
       setShowForm(false);
       setEditTarget(null);
     } catch (err: unknown) {
-      toast.error(err instanceof Error ? err.message : 'שגיאה בשמירת הפריט');
+      toast.error(err instanceof Error ? err.message : t('errors.saving_failed'));
     }
   };
 
@@ -68,9 +70,9 @@ export default function ItemsTab() {
     if (!deleteTarget) return;
     try {
       await deleteItem(deleteTarget._id);
-      toast.success(`🗑️ "${deleteTarget.name}" נמחק`);
+      toast.success(t('common.deleted', { name: deleteTarget.name, defaultValue: 'נמחק' }));
     } catch (err: unknown) {
-      toast.error(err instanceof Error ? err.message : 'שגיאה במחיקת הפריט');
+      toast.error(err instanceof Error ? err.message : t('errors.deleting_failed'));
     } finally {
       setDeleteTarget(null);
     }
@@ -83,7 +85,7 @@ export default function ItemsTab() {
         <input
           id="admin-items-search"
           type="text"
-          placeholder="🔍 חפש פריט..."
+          placeholder={t('admin.items.search_placeholder')}
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           className={styles.searchInput}
@@ -93,15 +95,15 @@ export default function ItemsTab() {
           className={styles.primaryBtn}
           onClick={() => { setEditTarget(null); setShowForm(true); }}
         >
-          ➕ פריט חדש
+          {t('admin.items.new_btn')}
         </button>
       </div>
 
-      {isLoading && <p className={styles.info}>⏳ טוען פריטים...</p>}
-      {isError   && <p className={styles.errorMsg}>❌ שגיאה בטעינת פריטים. וודא שהשרת פועל.</p>}
+      {isLoading && <p className={styles.info}>{t('admin.items.loading')}</p>}
+      {isError   && <p className={styles.errorMsg}>{t('errors.loading_failed')}</p>}
 
       {!isLoading && filtered.length === 0 && (
-        <p className={styles.info}>לא נמצאו פריטים.</p>
+        <p className={styles.info}>{t('home.no_products')}</p>
       )}
 
    
@@ -110,13 +112,13 @@ export default function ItemsTab() {
           <table className={styles.table}>
             <thead>
               <tr>
-                <th>תמונה</th>
-                <th>שם</th>
-                <th>קטגוריה</th>
-                <th>ספק</th>
-                <th>מחיר ₪</th>
-                <th>מלאי</th>
-                <th>פעולות</th>
+                <th>{t('admin.items.table.image')}</th>
+                <th>{t('admin.items.table.name')}</th>
+                <th>{t('admin.items.table.category')}</th>
+                <th>{t('admin.items.table.supplier')}</th>
+                <th>{t('admin.items.table.price')}</th>
+                <th>{t('admin.items.table.stock')}</th>
+                <th>{t('admin.items.table.actions')}</th>
               </tr>
             </thead>
             <tbody>
@@ -184,7 +186,7 @@ export default function ItemsTab() {
 
       {deleteTarget && (
         <ConfirmDialog
-          message={`האם למחוק את "${deleteTarget.name}"?`}
+          message={t('admin.items.confirm_delete', { name: deleteTarget.name })}
           onConfirm={handleDelete}
           onCancel={() => setDeleteTarget(null)}
         />

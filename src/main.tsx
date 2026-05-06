@@ -9,6 +9,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { store } from './store';
 import { ThemeProvider } from './context/ThemeContext';
 import App from './App';
+import './i18n';
 import './index.css';
 
 const queryClient = new QueryClient({

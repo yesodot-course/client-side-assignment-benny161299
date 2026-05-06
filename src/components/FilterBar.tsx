@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import type { IItem, ISupplier } from '../interfaces';
 import styles from './FilterBar.module.css';
 
@@ -9,6 +10,7 @@ interface Props {
 }
 
 export default function FilterBar({ items, suppliers, onFilter }: Props) {
+  const { t } = useTranslation();
   const [category, setCategory] = useState('');
   const [supplierId, setSupplierId] = useState('');
   const [minPrice, setMinPrice] = useState('');
@@ -59,34 +61,34 @@ export default function FilterBar({ items, suppliers, onFilter }: Props) {
     <div className={styles.bar}>
       <select id="filter-category" value={category}
         onChange={(e) => update(e.target.value)}>
-        <option value="">כל הקטגוריות</option>
+        <option value="">{t('filter.all_categories')}</option>
         {categories.map((c) => <option key={c} value={c}>{c}</option>)}
       </select>
 
       <select id="filter-supplier" value={supplierId}
         onChange={(e) => update(undefined, e.target.value)}>
-        <option value="">כל הספקים</option>
+        <option value="">{t('filter.all_suppliers')}</option>
         {suppliers.map((s) => <option key={s._id} value={s._id}>{s.name}</option>)}
       </select>
 
-      <input id="filter-min-price" type="number" placeholder="מחיר מינימום"
+      <input id="filter-min-price" type="number" placeholder={t('filter.min_price')}
         value={minPrice} min={0}
         onChange={(e) => update(undefined, undefined, e.target.value)} />
 
-      <input id="filter-max-price" type="number" placeholder="מחיר מקסימום"
+      <input id="filter-max-price" type="number" placeholder={t('filter.max_price')}
         value={maxPrice} min={0}
         onChange={(e) => update(undefined, undefined, undefined, e.target.value)} />
 
       <select id="filter-sort" value={sortBy}
         onChange={(e) => update(undefined, undefined, undefined, undefined, e.target.value)}>
-        <option value="">מיון</option>
-        <option value="price-asc">מחיר ↑</option>
-        <option value="price-desc">מחיר ↓</option>
-        <option value="name-asc">שם A→Z</option>
-        <option value="name-desc">שם Z→A</option>
+        <option value="">{t('filter.sort')}</option>
+        <option value="price-asc">{t('filter.price_asc')}</option>
+        <option value="price-desc">{t('filter.price_desc')}</option>
+        <option value="name-asc">{t('filter.name_asc')}</option>
+        <option value="name-desc">{t('filter.name_desc')}</option>
       </select>
 
-      <button id="filter-reset" onClick={reset} className={styles.reset}>נקה</button>
+      <button id="filter-reset" onClick={reset} className={styles.reset}>{t('filter.reset')}</button>
     </div>
   );
 }

@@ -9,15 +9,16 @@ export const apiClient = axios.create({
 });
 
 
+import i18n from '../i18n';
+
 apiClient.interceptors.response.use(
   (response) => response,
   (error: AxiosError<{ message?: string; status?: string }>) => {
     const serverMessage = error.response?.data?.message;
     if (serverMessage) {
-
       return Promise.reject(new Error(serverMessage));
     }
 
-    return Promise.reject(error instanceof Error ? error : new Error('שגיאת רשת'));
+    return Promise.reject(error instanceof Error ? error : new Error(i18n.t('errors.network_error')));
   },
 );

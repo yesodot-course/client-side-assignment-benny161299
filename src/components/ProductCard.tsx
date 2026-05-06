@@ -4,6 +4,7 @@ import { addToCart } from '../store/cartSlice';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 import styles from './ProductCard.module.css';
 
 interface Props {
@@ -11,12 +12,13 @@ interface Props {
 }
 
 export default function ProductCard({ item }: Props) {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const [qty, setQty] = useState(1);
 
   const handleAdd = () => {
     dispatch(addToCart({ item, quantity: qty }));
-    toast.success(`✅ ${item.name} נוסף לעגלה`);
+    toast.success(t('product.added_to_cart', { name: item.name }));
   };
 
   const outOfStock = item.stock === 0;
@@ -41,7 +43,7 @@ export default function ProductCard({ item }: Props) {
         <div className={styles.footer}>
           <span className={styles.price}>₪{item.price.toFixed(2)}</span>
           {outOfStock ? (
-            <span className={styles.outOfStock}>אזל המלאי</span>
+            <span className={styles.outOfStock}>{t('product.out_of_stock')}</span>
           ) : (
             <div className={styles.addRow}>
               <input
@@ -58,12 +60,12 @@ export default function ProductCard({ item }: Props) {
                 onClick={handleAdd}
                 className={styles.addBtn}
               >
-                הוסף
+                {t('product.add')}
               </button>
             </div>
           )}
         </div>
-        <span className={styles.stock}>במלאי: {item.stock}</span>
+        <span className={styles.stock}>{t('product.in_stock', { count: item.stock })}</span>
       </div>
     </article>
   );

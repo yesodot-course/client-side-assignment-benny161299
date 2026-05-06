@@ -10,7 +10,10 @@ import styles from './CartPage.module.css';
 
 
 
+import { useTranslation } from 'react-i18next';
+
 export default function CartPage() {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { items: cartItems, error: cartError } = useAppSelector((s) => s.cart);
@@ -21,14 +24,14 @@ export default function CartPage() {
 
   const handleCheckout = async () => {
     if (!address.trim() || address.trim().length < 5) {
-      toast.error('הכתובת חייבת להכיל לפחות 5 תווים');
+      toast.error(t('cart.min_length_error'));
       return;
     }
     
     const uniqueCount = cartItems.length;
     const totalQty    = cartItems.reduce((s, ci) => s + ci.quantity, 0);
-    if (uniqueCount > 10) { toast.error('מקסימום 10 פריטים שונים בהזמנה'); return; }
-    if (totalQty    > 50) { toast.error('מקסימום 50 פריטים בסה"כ'); return; }
+    if (uniqueCount > 10) { toast.error(t('cart.max_unique_error')); return; }
+    if (totalQty    > 50) { toast.error(t('cart.max_total_error')); return; }
 
     try {
       
@@ -37,10 +40,10 @@ export default function CartPage() {
         address,
       });
       dispatch(clearCart());
-      toast.success('✅ ההזמנה בוצעה בהצלחה!');
+      toast.success(t('cart.order_success'));
       navigate('/');
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'שגיאה בביצוע ההזמנה';
+      const msg = err instanceof Error ? err.message : t('errors.order_failed');
       toast.error(msg);
     }
   };
@@ -49,18 +52,18 @@ export default function CartPage() {
     <>
       <Navbar />
       <main className={styles.main}>
-        <h1 className={styles.title}>🛒 העגלה שלך</h1>
+        <h1 className={styles.title}>{t('cart.title')}</h1>
 
         {cartError && (
           <div className={styles.cartError} onClick={() => dispatch(clearError())}>
-            ⚠️ {cartError} (לחץ לסגירה)
+            ⚠️ {cartError} ({t('common.click_to_close', { defaultValue: 'לחץ לסגירה' })})
           </div>
         )}
 
         {cartItems.length === 0 ? (
           <div className={styles.empty}>
-            <p>העגלה ריקה.</p>
-            <Link to="/" className={styles.continueLink}>← המשך קניות</Link>
+            <p>{t('cart.empty')}</p>
+            <Link to="/" className={styles.continueLink}>{t('details.back')}</Link>
           </div>
         ) : (
           <div className={styles.layout}>
@@ -98,31 +101,31 @@ export default function CartPage() {
 
               <div className={styles.listActions}>
                 <Link to="/" className={styles.continueShoppingBtn}>
-                  🛍️ המשך בקניות
+                  {t('cart.continue_shopping')}
                 </Link>
                 <button id="cart-clear-btn" className={styles.clearBtn}
                   onClick={() => dispatch(clearCart())}>
-                  🗑️ נקה עגלה
+                  {t('cart.clear_cart')}
                 </button>
               </div>
             </section>
 
             {/* Summary + checkout */}
             <aside className={styles.summary}>
-              <h2 className={styles.summaryTitle}>סיכום הזמנה</h2>
+              <h2 className={styles.summaryTitle}>{t('cart.summary_title')}</h2>
               <div className={styles.summaryRow}>
-                <span>פריטים ({cartItems.reduce((s, ci) => s + ci.quantity, 0)})</span>
+                <span>{t('cart.items_count', { count: cartItems.reduce((s, ci) => s + ci.quantity, 0) })}</span>
                 <span>₪{total.toFixed(2)}</span>
               </div>
               <hr className={styles.divider} />
               <div className={styles.summaryTotal}>
-                <span>סה"כ</span>
+                <span>{t('cart.total')}</span>
                 <span>₪{total.toFixed(2)}</span>
               </div>
               <input
                 id="checkout-address"
                 type="text"
-                placeholder="כתובת למשלוח *"
+                placeholder={t('cart.address_placeholder')}
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
                 className={styles.addressInput}
@@ -134,7 +137,7 @@ export default function CartPage() {
                 disabled={isPending}
                 className={styles.checkoutBtn}
               >
-                {isPending ? 'מעבד...' : '✅ בצע הזמנה'}
+                {isPending ? t('cart.processing') : t('cart.checkout')}
               </button>
             </aside>
           </div>

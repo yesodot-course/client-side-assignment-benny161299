@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import Navbar            from '../components/Navbar';
 import ItemsTab          from '../components/admin/ItemsTab';
 import SuppliersTab      from '../components/admin/SuppliersTab';
@@ -10,6 +11,7 @@ type Tab = 'items' | 'suppliers' | 'orders' | 'analysis';
 
 
 export default function AdminPage() {
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<Tab>('items');
 
   return (
@@ -17,8 +19,8 @@ export default function AdminPage() {
       <Navbar />
       <main className={styles.main}>
         <header className={styles.pageHeader}>
-          <h1 className={styles.pageTitle}>⚙️ ממשק ניהול</h1>
-          <p className={styles.pageSubtitle}>ניהול מוצרים, ספקים, הזמנות ואנליטיקה</p>
+          <h1 className={styles.pageTitle}>{t('admin.title')}</h1>
+          <p className={styles.pageSubtitle}>{t('admin.subtitle')}</p>
         </header>
 
         {/* Tab navigation */}
@@ -30,7 +32,7 @@ export default function AdminPage() {
             className={`${styles.tab} ${activeTab === 'items' ? styles.tabActive : ''}`}
             onClick={() => setActiveTab('items')}
           >
-            📦 פריטים
+            {t('admin.tabs.items')}
           </button>
           <button
             id="admin-tab-suppliers"
@@ -39,7 +41,7 @@ export default function AdminPage() {
             className={`${styles.tab} ${activeTab === 'suppliers' ? styles.tabActive : ''}`}
             onClick={() => setActiveTab('suppliers')}
           >
-            🏭 ספקים
+            {t('admin.tabs.suppliers')}
           </button>
           <button
             id="admin-tab-orders"
@@ -48,7 +50,7 @@ export default function AdminPage() {
             className={`${styles.tab} ${activeTab === 'orders' ? styles.tabActive : ''}`}
             onClick={() => setActiveTab('orders')}
           >
-            🛒 הזמנות
+            {t('admin.tabs.orders')}
           </button>
           <button
             id="admin-tab-analysis"
@@ -57,7 +59,7 @@ export default function AdminPage() {
             className={`${styles.tab} ${activeTab === 'analysis' ? styles.tabActive : ''}`}
             onClick={() => setActiveTab('analysis')}
           >
-            📊 אנליטיקה
+            {t('admin.tabs.analysis')}
           </button>
         </div>
 
