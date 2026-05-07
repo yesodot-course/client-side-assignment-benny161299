@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 import ItemForm, { type ItemFormData } from '../ItemForm';
@@ -27,11 +27,14 @@ export default function ItemsTab() {
   const [deleteTarget, setDeleteTarget] = useState<IItem | null>(null);
   const [search, setSearch]             = useState('');
 
-  const filtered = items.filter(
-    (i) =>
-      i.name.toLowerCase().includes(search.toLowerCase()) ||
-      i.category.toLowerCase().includes(search.toLowerCase())
-  );
+  const filtered = useMemo(() => {
+    const lowerSearch = search.toLowerCase();
+    return items.filter(
+      (i) =>
+        i.name.toLowerCase().includes(lowerSearch) ||
+        i.category.toLowerCase().includes(lowerSearch)
+    );
+  }, [items, search]);
 
   const handleFormSubmit = async (data: ItemFormData) => {
     try {
