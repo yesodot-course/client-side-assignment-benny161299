@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { IItem, ISupplier } from '../interfaces';
 import styles from './FilterBar.module.css';
@@ -48,8 +48,15 @@ export default function FilterBar({ items, suppliers, onFilter }: Props) {
   ) => {
     setCategory(cat); setSupplierId(sup);
     setMinPrice(min); setMaxPrice(max); setSortBy(sort);
-    apply(cat, sup, min, max, sort);
   };
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      apply(category, supplierId, minPrice, maxPrice, sortBy);
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [category, supplierId, minPrice, maxPrice, sortBy, items]);
 
   const reset = () => {
     setCategory(''); setSupplierId('');
