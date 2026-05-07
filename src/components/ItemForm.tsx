@@ -91,6 +91,9 @@ export default function ItemForm({ suppliers, initial, onSubmit, onClose, isPend
 
   const isEdit = !!initial;
 
+  const isValid = !!supplierId && !!name.trim() && !!price && !!stock && !!category.trim();
+  const canSubmit = isValid && !isPending && !uploading;
+
   return (
     <div className={styles.overlay}>
       <div className={styles.modal} role="dialog" aria-modal="true">
@@ -266,7 +269,7 @@ export default function ItemForm({ suppliers, initial, onSubmit, onClose, isPend
             <button
               type="submit"
               className={styles.submitBtn}
-              disabled={isPending || uploading || !supplierId || !name || !price || !stock || !category}
+              disabled={!canSubmit}
             >
               {isPending ? t('admin.items.form.submit_saving') : isEdit ? t('admin.items.form.submit_save') : t('admin.items.form.submit_create')}
             </button>
