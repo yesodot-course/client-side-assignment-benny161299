@@ -1,4 +1,3 @@
-
 export interface ISupplierItem {
   itemName: string;
   supplierPrice: number;
