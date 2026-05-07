@@ -122,6 +122,25 @@
       }
     }
   },
+  "analysis": {
+    "inventory_title": "מלאי החנות",
+    "total_products": "סה״כ פריטים בחנות",
+    "unique_items": "פריטים ייחודיים",
+    "low_stock": "עומדים להיגמר (מלאי < 5)",
+    "healthy_stock": "מלאי תקין",
+    "out_of_stock": "אזלו מהמלאי",
+    "all_in_stock": "ללא פריטים חסרים",
+    "items_left": "{{count}} נשארו",
+    "out_of_stock_badge": "אזל",
+    "icons": {
+      "inventory": "📦",
+      "low_stock": "🛍️",
+      "warning": "⚠️",
+      "success": "✅",
+      "danger": "❌",
+      "oos": "🚫"
+    }
+  },
   "filter": {
     "all_categories": "כל הקטגוריות",
     "all_suppliers": "כל הספקים",
