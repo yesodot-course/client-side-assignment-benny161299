@@ -9,11 +9,70 @@ import {
   useUpdateSupplier,
   useDeleteSupplier,
   useRemoveItemFromSupplier,
+  useAddItemToSupplier,
 } from '../../hooks/useSuppliers';
 import type { ISupplier } from '../../interfaces';
 import styles from '../../pages/AdminPage.module.css';
+import { RETAIL_MARKUP_FACTOR } from '../../constants';
 
-const RETAIL_MARKUP_FACTOR = 1.3;
+
+function AddCatalogItemForm({ supplierId }: { supplierId: string }) {
+  const { t } = useTranslation();
+  const { mutateAsync: addItem, isPending } = useAddItemToSupplier();
+  
+  const [itemName, setItemName] = useState('');
+  const [supplierPrice, setSupplierPrice] = useState('');
+
+
+  const isValid = itemName.trim().length > 0 && Number(supplierPrice) > 0;
+
+  const handleAdd = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!isValid) return;
+
+    try {
+      await addItem({
+        supplierId,
+        item: { itemName: itemName.trim(), supplierPrice: Number(supplierPrice) },
+      });
+      toast.success(t('common.success'));
+      setItemName('');
+      setSupplierPrice('');
+    } catch {
+      toast.error(t('errors.saving_failed'));
+    }
+  };
+
+  return (
+    <form className={styles.addItemForm} onSubmit={handleAdd}>
+      <h4>{t('admin.suppliers.add_item.title')}</h4>
+      <div className={styles.addItemFields}>
+        <input
+          type="text"
+          placeholder={t('admin.suppliers.add_item.name_placeholder')}
+          value={itemName}
+          onChange={(e) => setItemName(e.target.value)}
+          required
+        />
+        <input
+          type="number"
+          step="0.01"
+          min="0.01"
+          placeholder={t('admin.suppliers.add_item.price_placeholder')}
+          value={supplierPrice}
+          onChange={(e) => setSupplierPrice(e.target.value)}
+          required
+        />
+        <button type="submit" className={styles.primaryBtn} disabled={!isValid || isPending}>
+          {isPending ? t('common.loading') : t('admin.suppliers.add_item.submit_btn')}
+        </button>
+      </div>
+      {!isValid && supplierPrice !== '' && Number(supplierPrice) <= 0 && (
+        <span className={styles.errorHint}>{t('admin.suppliers.add_item.price_error')}</span>
+      )}
+    </form>
+  );
+}
 
 export default function SuppliersTab() {
   const { t } = useTranslation();
@@ -182,6 +241,7 @@ export default function SuppliersTab() {
                         </tbody>
                       </table>
                     )}
+                    <AddCatalogItemForm supplierId={sup._id} />
                   </div>
                 )}
               </div>

@@ -161,6 +161,13 @@
         "item_name": "שם פריט",
         "supplier_price": "מחיר ספק ₪",
         "min_retail": "מינ׳ קמעוני ₪"
+      },
+      "add_item": {
+        "title": "הוסף פריט לקטלוג",
+        "name_placeholder": "שם הפריט...",
+        "price_placeholder": "מחיר ספק...",
+        "submit_btn": "הוסף",
+        "price_error": "המחיר חייב להיות גדול מ-0"
       }
     }
   },
