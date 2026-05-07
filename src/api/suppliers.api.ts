@@ -37,3 +37,7 @@ export const removeItemFromSupplier = async (
   });
   return res.data.data!;
 };
+export const updateSupplier = async (id: string, data: { name: string }): Promise<ISupplier> => {
+  const res = await apiClient.put<ApiResponse<ISupplier>>(`/suppliers/${id}`, data);
+  return res.data.data!;
+};

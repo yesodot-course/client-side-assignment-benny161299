@@ -6,6 +6,7 @@ import {
   deleteSupplier,
   addItemToSupplier,
   removeItemFromSupplier,
+  updateSupplier,
 } from '../api/suppliers.api';
 
 export const useSuppliers = () =>
@@ -51,5 +52,14 @@ export const useRemoveItemFromSupplier = () => {
       qc.invalidateQueries({ queryKey: ['suppliers'] });
       qc.invalidateQueries({ queryKey: ['items'] }); // cascade delete מהשרת
     },
+  });
+};
+
+export const useUpdateSupplier = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, data }: { id: string; data: { name: string } }) =>
+      updateSupplier(id, data),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['suppliers'] }),
   });
 };

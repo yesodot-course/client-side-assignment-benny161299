@@ -19,7 +19,8 @@
     "cart_icon": "🛒",
     "location_icon": "📍",
     "arrow_up": "▲",
-    "arrow_down": "▼"
+    "arrow_down": "▼",
+    "remove_icon": "🗑️"
   },
   "errors": {
     "network_error": "שגיאת רשת",
@@ -104,6 +105,21 @@
       "show_items": "הצג פריטים",
       "empty_order": "אין פריטים בהזמנה",
       "error_loading": "❌ שגיאה בטעינת הזמנות. וודא שהשרת פועל."
+    },
+    "suppliers": {
+      "count": "{{count}} ספקים",
+      "search_placeholder": "🔍 חפש ספק...",
+      "new_btn": "➕ ספק חדש",
+      "loading": "⏳ טוען ספקים...",
+      "no_items": "אין פריטים רשומים לספק זה",
+      "remove_item": "הסר מהקטלוג",
+      "name_label": "שם הספק *",
+      "name_placeholder": "שם הספק",
+      "table": {
+        "item_name": "שם פריט",
+        "supplier_price": "מחיר ספק ₪",
+        "min_retail": "מינ׳ קמעוני ₪"
+      }
     }
   },
   "filter": {
