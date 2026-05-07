@@ -9,7 +9,17 @@
     "search": "🔍 חפש...",
     "no_results": "לא נמצאו תוצאות.",
     "success": "✅ הצלחנו!",
-    "click_to_close": "לחץ לסגירה"
+    "click_to_close": "לחץ לסגירה",
+    "collapse": "כווץ",
+    "quantity_prefix": "×",
+    "box_icon": "📦",
+    "link_icon": "🔗",
+    "supplier_icon": "🏭",
+    "tag_icon": "🏷️",
+    "cart_icon": "🛒",
+    "location_icon": "📍",
+    "arrow_up": "▲",
+    "arrow_down": "▼"
   },
   "errors": {
     "network_error": "שגיאת רשת",
@@ -85,6 +95,15 @@
       "confirm_delete": "האם למחוק את \"{{name}}\"?",
       "update_success": "✅ הפריט עודכן בהצלחה",
       "create_success": "✅ פריט חדש נוצר בהצלחה"
+    },
+    "orders": {
+      "count": "{{count}} הזמנות",
+      "loading": "⏳ טוען הזמנות...",
+      "no_orders": "אין הזמנות עדיין.",
+      "summary": "{{count}} פריטים | רווח: {{profit}}",
+      "show_items": "הצג פריטים",
+      "empty_order": "אין פריטים בהזמנה",
+      "error_loading": "❌ שגיאה בטעינת הזמנות. וודא שהשרת פועל."
     }
   },
   "filter": {
