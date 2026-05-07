@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useItems } from '../../hooks/useItems';
-import styles from '../AnalysisDashboard.module.css';
+import styles from './InventoryStatsRow.module.css';
 
 const LOW_STOCK_THRESHOLD = 5;
 
