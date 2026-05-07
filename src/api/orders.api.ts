@@ -1,4 +1,4 @@
-import { apiClient } from './client';
+import { apiClient } from './client.api';
 import type { IOrder, IOrderItem, ApiResponse } from '../interfaces';
 
 

@@ -1,4 +1,4 @@
-import { apiClient } from './client';
+import { apiClient } from './client.api';
 import type { ISupplier, ApiResponse } from '../interfaces';
 
 export const fetchAllSuppliers = async (): Promise<ISupplier[]> => {
