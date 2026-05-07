@@ -71,12 +71,30 @@ export default function ItemForm({ suppliers, initial, onSubmit, onClose, isPend
     });
   };
 
+  const isDirty = 
+    name !== (initial?.name ?? '') ||
+    price !== (initial?.price?.toString() ?? '') ||
+    stock !== (initial?.stock?.toString() ?? '') ||
+    category !== (initial?.category ?? '') ||
+    description !== (initial?.description ?? '') ||
+    supplierId !== (initial?.supplier ? (typeof initial.supplier === 'object' ? initial.supplier._id : initial.supplier) : '') ||
+    image !== (initial?.image ?? '');
+
+  const handleClose = () => {
+    if (isDirty) {
+      if (!window.confirm(t('admin.items.form.confirm_cancel'))) {
+        return;
+      }
+    }
+    onClose();
+  };
+
   const isEdit = !!initial;
 
   return (
-    <div className={styles.overlay} onClick={(e) => e.target === e.currentTarget && onClose()}>
+    <div className={styles.overlay}>
       <div className={styles.modal} role="dialog" aria-modal="true">
-        <button className={styles.closeBtn} onClick={onClose} aria-label={t('common.click_to_close')}>✕</button>
+        <button className={styles.closeBtn} onClick={handleClose} aria-label={t('common.click_to_close')}>✕</button>
         <h2 className={styles.title}>{isEdit ? t('admin.items.edit_title') : t('admin.items.new_title')}</h2>
 
         <form onSubmit={handleSubmit} className={styles.form} noValidate>
@@ -242,7 +260,7 @@ export default function ItemForm({ suppliers, initial, onSubmit, onClose, isPend
           </div>
 
           <div className={styles.actions}>
-            <button type="button" className={styles.cancelBtn} onClick={onClose}>
+            <button type="button" className={styles.cancelBtn} onClick={handleClose}>
               {t('common.cancel')}
             </button>
             <button

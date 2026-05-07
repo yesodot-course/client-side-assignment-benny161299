@@ -104,6 +104,7 @@
       "update_success": "✅ הפריט עודכן בהצלחה",
       "create_success": "✅ פריט חדש נוצר בהצלחה",
       "form": {
+        "confirm_cancel": "יש שינויים שלא נשמרו. האם אתה בטוח שברצונך לסגור?",
         "name_label": "שם פריט *",
         "name_select_placeholder": "— בחר שם פריט —",
         "name_no_items": "לספק אין פריטים רשומים",
