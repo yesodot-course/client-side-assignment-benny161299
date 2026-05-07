@@ -1,6 +1,7 @@
 {
   "common": {
     "loading": "⏳ טוען...",
+    "loading_icon": "⏳",
     "error": "❌ שגיאה",
     "save": "שמור",
     "cancel": "ביטול",
@@ -20,7 +21,10 @@
     "location_icon": "📍",
     "arrow_up": "▲",
     "arrow_down": "▼",
-    "remove_icon": "🗑️"
+    "remove_icon": "🗑️",
+    "upload_icon": "📁",
+    "save_icon": "💾",
+    "create_icon": "✅"
   },
   "errors": {
     "network_error": "שגיאת רשת",
@@ -29,7 +33,8 @@
     "supplier_not_found": "ספק לא נמצא",
     "saving_failed": "שגיאה בשמירה",
     "deleting_failed": "שגיאה במחיקה",
-    "loading_failed": "שגיאה בטעינת הנתונים. וודא שהשרת פועל."
+    "loading_failed": "שגיאה בטעינת הנתונים. וודא שהשרת פועל.",
+    "upload_failed": "שגיאה בהעלאת התמונה"
   },
   "navbar": {
     "cart": "🛒 עגלה",
@@ -81,6 +86,8 @@
       "analysis": "📊 אנליטיקה"
     },
     "items": {
+      "edit_title": "✏️ עריכת פריט",
+      "new_title": "➕ פריט חדש",
       "search_placeholder": "🔍 חפש פריט...",
       "new_btn": "➕ פריט חדש",
       "loading": "⏳ טוען פריטים...",
@@ -95,7 +102,33 @@
       },
       "confirm_delete": "האם למחוק את \"{{name}}\"?",
       "update_success": "✅ הפריט עודכן בהצלחה",
-      "create_success": "✅ פריט חדש נוצר בהצלחה"
+      "create_success": "✅ פריט חדש נוצר בהצלחה",
+      "form": {
+        "name_label": "שם פריט *",
+        "name_select_placeholder": "— בחר שם פריט —",
+        "name_no_items": "לספק אין פריטים רשומים",
+        "name_select_first": "בחר ספק תחילה",
+        "name_match_hint": "השם חייבת להיות זהה לשם פריט אצל הספק",
+        "price_label": "מחיר (₪) *",
+        "price_min_hint": "מינימום: ₪{{min}} (מחיר ספק × {{factor}})",
+        "stock_label": "כמות במלאי *",
+        "category_label": "קטגוריה *",
+        "category_placeholder": "למשל: אלקטרוניקה",
+        "supplier_label": "ספק *",
+        "supplier_placeholder": "— בחר ספק —",
+        "supplier_edit_lock": "לא ניתן לשנות ספק בעריכה",
+        "image_label": "קישור לתמונה (אופציונלי)",
+        "image_placeholder": "https://... או העלה קובץ ←",
+        "upload_btn": "העלה",
+        "upload_title": "העלאת תמונה מהמחשב",
+        "uploading_cloud": "⏳ מעלה לענן...",
+        "image_preview": "תצוגה מקדימה",
+        "desc_label": "תיאור (אופציונלי)",
+        "desc_placeholder": "תיאור קצר של המוצר...",
+        "submit_saving": "שומר...",
+        "submit_save": "💾 שמור שינויים",
+        "submit_create": "✅ צור פריט"
+      }
     },
     "orders": {
       "count": "{{count}} הזמנות",

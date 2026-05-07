@@ -1,6 +1,8 @@
 import { useState, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import type { IItem, ISupplier } from '../interfaces';
 import { uploadToImgbb } from '../utils/imgbb';
+import { RETAIL_MARKUP_FACTOR } from '../constants';
 import styles from './ItemForm.module.css';
 
 interface Props {
@@ -22,6 +24,7 @@ export interface ItemFormData {
 }
 
 export default function ItemForm({ suppliers, initial, onSubmit, onClose, isPending }: Props) {
+  const { t } = useTranslation();
   const [name, setName]             = useState(initial?.name ?? '');
   const [price, setPrice]           = useState(initial?.price?.toString() ?? '');
   const [stock, setStock]           = useState(initial?.stock?.toString() ?? '');
@@ -35,7 +38,6 @@ export default function ItemForm({ suppliers, initial, onSubmit, onClose, isPend
   const [uploadError, setUploadError] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  
   const selectedSupplier = suppliers.find((s) => s._id === supplierId);
   const supplierItemNames = selectedSupplier?.items.map((i) => i.itemName) ?? [];
 
@@ -48,10 +50,9 @@ export default function ItemForm({ suppliers, initial, onSubmit, onClose, isPend
       const result = await uploadToImgbb(file);
       setImage(result.url);
     } catch (err) {
-      setUploadError(err instanceof Error ? err.message : 'שגיאה בהעלאת התמונה');
+      setUploadError(t('errors.upload_failed'));
     } finally {
       setUploading(false);
-
       if (fileInputRef.current) fileInputRef.current.value = '';
     }
   };
@@ -75,38 +76,37 @@ export default function ItemForm({ suppliers, initial, onSubmit, onClose, isPend
   return (
     <div className={styles.overlay} onClick={(e) => e.target === e.currentTarget && onClose()}>
       <div className={styles.modal} role="dialog" aria-modal="true">
-        <button className={styles.closeBtn} onClick={onClose} aria-label="סגור">✕</button>
-        <h2 className={styles.title}>{isEdit ? '✏️ עריכת פריט' : '➕ פריט חדש'}</h2>
+        <button className={styles.closeBtn} onClick={onClose} aria-label={t('common.click_to_close')}>✕</button>
+        <h2 className={styles.title}>{isEdit ? t('admin.items.edit_title') : t('admin.items.new_title')}</h2>
 
         <form onSubmit={handleSubmit} className={styles.form} noValidate>
 
-          {/* Supplier (must choose first) */}
+          {/* Supplier */}
           <div className={styles.field}>
-            <label htmlFor="item-form-supplier">ספק *</label>
+            <label htmlFor="item-form-supplier">{t('admin.items.form.supplier_label')}</label>
             <select
               id="item-form-supplier"
               value={supplierId}
               onChange={(e) => {
                 setSupplierId(e.target.value);
-             
                 if (!isEdit) setName('');
               }}
               required
               disabled={isEdit}   
             >
-              <option value="">— בחר ספק —</option>
+              <option value="">{t('admin.items.form.supplier_placeholder')}</option>
               {suppliers.map((s) => (
                 <option key={s._id} value={s._id}>{s.name}</option>
               ))}
             </select>
             {isEdit && (
-              <span className={styles.hint}>לא ניתן לשנות ספק בעריכה</span>
+              <span className={styles.hint}>{t('admin.items.form.supplier_edit_lock')}</span>
             )}
           </div>
 
-          {/* Name — must match supplier item name */}
+          {/* Name */}
           <div className={styles.field}>
-            <label htmlFor="item-form-name">שם פריט *</label>
+            <label htmlFor="item-form-name">{t('admin.items.form.name_label')}</label>
             {supplierItemNames.length > 0 ? (
               <select
                 id="item-form-name"
@@ -115,7 +115,7 @@ export default function ItemForm({ suppliers, initial, onSubmit, onClose, isPend
                 required
                 disabled={isEdit}
               >
-                <option value="">— בחר שם פריט —</option>
+                <option value="">{t('admin.items.form.name_select_placeholder')}</option>
                 {supplierItemNames.map((n) => (
                   <option key={n} value={n}>{n}</option>
                 ))}
@@ -126,19 +126,19 @@ export default function ItemForm({ suppliers, initial, onSubmit, onClose, isPend
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder={supplierId ? 'הספק אין לו פריטים רשומים' : 'בחר ספק תחילה'}
+                placeholder={supplierId ? t('admin.items.form.name_no_items') : t('admin.items.form.name_select_first')}
                 required
                 disabled={isEdit || !supplierId}
               />
             )}
             {!isEdit && supplierId && supplierItemNames.length > 0 && (
-              <span className={styles.hint}>השם חייב להיות זהה לשם פריט אצל הספק</span>
+              <span className={styles.hint}>{t('admin.items.form.name_match_hint')}</span>
             )}
           </div>
 
           {/* Price */}
           <div className={styles.field}>
-            <label htmlFor="item-form-price">מחיר (₪) *</label>
+            <label htmlFor="item-form-price">{t('admin.items.form.price_label')}</label>
             <input
               id="item-form-price"
               type="number"
@@ -152,14 +152,18 @@ export default function ItemForm({ suppliers, initial, onSubmit, onClose, isPend
             {selectedSupplier && name && (() => {
               const si = selectedSupplier.items.find((i) => i.itemName === name);
               if (!si) return null;
-              const minP = (si.supplierPrice * 1.3).toFixed(2);
-              return <span className={styles.hint}>מינימום: ₪{minP} (מחיר ספק × 1.3)</span>;
+              const minP = (si.supplierPrice * RETAIL_MARKUP_FACTOR).toFixed(2);
+              return (
+                <span className={styles.hint}>
+                  {t('admin.items.form.price_min_hint', { min: minP, factor: RETAIL_MARKUP_FACTOR })}
+                </span>
+              );
             })()}
           </div>
 
           {/* Stock */}
           <div className={styles.field}>
-            <label htmlFor="item-form-stock">כמות במלאי *</label>
+            <label htmlFor="item-form-stock">{t('admin.items.form.stock_label')}</label>
             <input
               id="item-form-stock"
               type="number"
@@ -173,28 +177,27 @@ export default function ItemForm({ suppliers, initial, onSubmit, onClose, isPend
 
           {/* Category */}
           <div className={styles.field}>
-            <label htmlFor="item-form-category">קטגוריה *</label>
+            <label htmlFor="item-form-category">{t('admin.items.form.category_label')}</label>
             <input
               id="item-form-category"
               type="text"
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              placeholder="למשל: אלקטרוניקה"
+              placeholder={t('admin.items.form.category_placeholder')}
               required
             />
           </div>
 
-          {/* Image — URL input OR file upload */}
+          {/* Image */}
           <div className={styles.field}>
-            <label>קישור לתמונה (אופציונלי)</label>
-
+            <label>{t('admin.items.form.image_label')}</label>
             <div className={styles.imageRow}>
               <input
                 id="item-form-image"
                 type="text"
                 value={image}
                 onChange={(e) => { setImage(e.target.value); setUploadError(''); }}
-                placeholder="https://... או העלה קובץ ←"
+                placeholder={t('admin.items.form.image_placeholder')}
                 className={styles.imageUrlInput}
               />
               <button
@@ -202,11 +205,10 @@ export default function ItemForm({ suppliers, initial, onSubmit, onClose, isPend
                 className={styles.uploadBtn}
                 onClick={() => fileInputRef.current?.click()}
                 disabled={uploading}
-                title="העלאת תמונה מהמחשב"
+                title={t('admin.items.form.upload_title')}
               >
-                {uploading ? '⏳' : '📁 העלה'}
+                {uploading ? t('common.loading_icon') : `${t('common.upload_icon')} ${t('admin.items.form.upload_btn')}`}
               </button>
-              {/* Hidden file input */}
               <input
                 ref={fileInputRef}
                 type="file"
@@ -215,43 +217,40 @@ export default function ItemForm({ suppliers, initial, onSubmit, onClose, isPend
                 onChange={handleFileChange}
               />
             </div>
-
             {uploadError && <span className={styles.errorHint}>{uploadError}</span>}
-            {uploading  && <p className={styles.hint}>⏳ מעלה לענן...</p>}
-
-            {/* Preview */}
+            {uploading  && <p className={styles.hint}>{t('admin.items.form.uploading_cloud')}</p>}
             {image && !uploading && (
               <img
                 src={image}
-                alt="תצוגה מקדימה"
+                alt={t('admin.items.form.image_preview')}
                 className={styles.imagePreview}
                 onError={(e) => (e.currentTarget.style.display = 'none')}
               />
             )}
           </div>
 
-          {/* Description (optional) */}
+          {/* Description */}
           <div className={styles.field}>
-            <label htmlFor="item-form-description">תיאור (אופציונלי)</label>
+            <label htmlFor="item-form-description">{t('admin.items.form.desc_label')}</label>
             <textarea
               id="item-form-description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows={3}
-              placeholder="תיאור קצר של המוצר..."
+              placeholder={t('admin.items.form.desc_placeholder')}
             />
           </div>
 
           <div className={styles.actions}>
             <button type="button" className={styles.cancelBtn} onClick={onClose}>
-              ביטול
+              {t('common.cancel')}
             </button>
             <button
               type="submit"
               className={styles.submitBtn}
               disabled={isPending || uploading || !supplierId || !name || !price || !stock || !category}
             >
-              {isPending ? 'שומר...' : isEdit ? '💾 שמור שינויים' : '✅ צור פריט'}
+              {isPending ? t('admin.items.form.submit_saving') : isEdit ? t('admin.items.form.submit_save') : t('admin.items.form.submit_create')}
             </button>
           </div>
         </form>
