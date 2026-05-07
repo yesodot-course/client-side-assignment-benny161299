@@ -4,11 +4,12 @@
     "error": "❌ שגיאה",
     "save": "שמור",
     "cancel": "ביטול",
-    "delete": "מחק",
-    "edit": "ערוך",
+    "delete": "🗑️ מחק",
+    "edit": "✏️ ערוך",
     "search": "🔍 חפש...",
     "no_results": "לא נמצאו תוצאות.",
-    "success": "✅ הצלחנו!"
+    "success": "✅ הצלחנו!",
+    "click_to_close": "לחץ לסגירה"
   },
   "errors": {
     "network_error": "שגיאת רשת",
@@ -20,10 +21,10 @@
     "loading_failed": "שגיאה בטעינת הנתונים. וודא שהשרת פועל."
   },
   "navbar": {
-    "cart": "עגלה",
-    "admin": "ניהול",
-    "dark_mode": "מצב כהה",
-    "light_mode": "מצב בהיר"
+    "cart": "🛒 עגלה",
+    "admin": "⚙️ ניהול",
+    "dark_mode": "🌙 מצב כהה",
+    "light_mode": "☀️ מצב בהיר"
   },
   "home": {
     "search_placeholder": "🔍 חפש מוצר לפי שם...",
