@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { useOrders } from '../../hooks/useOrders';
 import { useItems } from '../../hooks/useItems';
-import type { IItem } from '../../interfaces';
+import type { IItem, IOrderItem } from '../../interfaces';
 import styles from '../../pages/AdminPage.module.css';
 import orderStyles from './OrdersTab.module.css';
 
@@ -81,70 +81,78 @@ export default function OrdersTab() {
                     {order.items.length === 0 ? (
                       <p className={styles.info}>{t('admin.orders.empty_order')}</p>
                     ) : (
-                      <div className={orderStyles.itemsList}>
-                        {order.items.map((orderItem, idx) => {
-                          const itemId = typeof orderItem.itemId === 'object' 
-                            ? orderItem.itemId._id 
-                            : orderItem.itemId;
-                          
-                          const isPopulated = typeof orderItem.itemId === 'object';
-                          const itemFromMap = itemMap.get(itemId);
-                          const item = (itemFromMap || (isPopulated ? orderItem.itemId : null)) as (Partial<IItem> | null);
-                          const itemName = typeof orderItem.itemId === 'object' ? orderItem.itemId.name : (itemFromMap?.name ?? itemId);
-                          const itemImage = typeof orderItem.itemId === 'object' ? orderItem.itemId.image : itemFromMap?.image;
+                    <div className={orderStyles.itemsList}>
+                      {order.items.map((orderItem, idx) => (
+                        <OrderItemCard 
+                          key={`${idx}`} 
+                          orderItem={orderItem} 
+                          itemMap={itemMap} 
+                        />
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    )}
+  </section>
+);
+}
 
-                          return (
-                            <div key={`${itemId}-${idx}`} className={orderStyles.itemCard}>
-                          
-                              <div className={orderStyles.thumb}>
-                                  {itemImage ? (
-                                    <img src={itemImage} alt={itemName} className={orderStyles.thumbImg} />
-                                  ) : (
-                                    <div className={orderStyles.thumbPlaceholder}>{t('common.box_icon')}</div>
-                                  )}
-                              </div>
 
-                          
-                              <div className={orderStyles.itemDetails}>
-                                <Link
-                                  to={`/items/${itemId}`}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className={orderStyles.itemName}
-                                >
-                                  {itemName} {t('common.link_icon')}
-                                </Link>
+function OrderItemCard({ orderItem, itemMap }: { 
+orderItem: IOrderItem, 
+itemMap: Map<string, IItem>
+}) {
+const { t } = useTranslation();
 
-                                <div className={orderStyles.meta}>
-                                  {item?.supplier && (
-                                    <span className={orderStyles.tag}>{t('common.supplier_icon')} {
-                                      typeof item.supplier === 'object'
-                                        ? item.supplier.name
-                                        : item.supplier
-                                    }</span>
-                                  )}
-                                  {item?.category && (
-                                    <span className={orderStyles.tag}>{t('common.tag_icon')} {item.category}</span>
-                                  )}
-                                  <span className={orderStyles.tag}>{t('common.quantity_prefix')} {orderItem.quantity}</span>
-                                </div>
+const itemId = typeof orderItem.itemId === 'object' ? orderItem.itemId._id : orderItem.itemId;
+const isPopulated = typeof orderItem.itemId === 'object';
+const itemFromMap = itemMap.get(itemId);
 
-                                {item?.description && (
-                                  <p className={orderStyles.desc}>{item.description}</p>
-                                )}
-                              </div>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </div>
+const item = (itemFromMap || (isPopulated ? orderItem.itemId : null)) as (Partial<IItem> | null);
+const itemName = typeof orderItem.itemId === 'object' ? orderItem.itemId.name : (itemFromMap?.name ?? itemId);
+const itemImage = typeof orderItem.itemId === 'object' ? orderItem.itemId.image : itemFromMap?.image;
+
+return (
+  <div className={orderStyles.itemCard}>
+    <div className={orderStyles.thumb}>
+      {itemImage ? (
+        <img src={itemImage} alt={itemName} className={orderStyles.thumbImg} />
+      ) : (
+        <div className={orderStyles.thumbPlaceholder}>{t('common.box_icon')}</div>
       )}
-    </section>
-  );
+    </div>
+
+    <div className={orderStyles.itemDetails}>
+      <Link
+        to={`/items/${itemId}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={orderStyles.itemName}
+      >
+        {itemName} {t('common.link_icon')}
+      </Link>
+
+      <div className={orderStyles.meta}>
+        {item?.supplier && (
+          <span className={orderStyles.tag}>
+            {t('common.supplier_icon')} {typeof item.supplier === 'object' ? item.supplier.name : item.supplier}
+          </span>
+        )}
+        {item?.category && (
+          <span className={orderStyles.tag}>{t('common.tag_icon')} {item.category}</span>
+        )}
+        <span className={orderStyles.tag}>{t('common.quantity_prefix')} {orderItem.quantity}</span>
+      </div>
+
+      {item?.description && (
+        <p className={orderStyles.desc}>{item.description}</p>
+      )}
+    </div>
+  </div>
+);
 }
