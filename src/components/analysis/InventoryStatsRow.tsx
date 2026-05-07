@@ -3,6 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { useItems } from '../../hooks/useItems';
 import styles from '../AnalysisDashboard.module.css';
 
+const LOW_STOCK_THRESHOLD = 5;
+
 export default function InventoryStatsRow() {
   const { t } = useTranslation();
   const { data: allItems = [] } = useItems();
@@ -10,7 +12,7 @@ export default function InventoryStatsRow() {
   const totalProducts = allItems.length;
 
   const lowStockItems = useMemo(() => 
-    allItems.filter((i) => i.stock > 0 && i.stock < 5),
+    allItems.filter((i) => i.stock > 0 && i.stock < LOW_STOCK_THRESHOLD),
   [allItems]);
 
   const outOfStockItems = useMemo(() => 
@@ -39,7 +41,7 @@ export default function InventoryStatsRow() {
         >
           <div className={styles.cardIcon}>{t('analysis.icons.low_stock')}</div>
           <div className={styles.cardBody}>
-            <p className={styles.cardLabel}>{t('analysis.low_stock')}</p>
+            <p className={styles.cardLabel}>{t('analysis.low_stock', { threshold: LOW_STOCK_THRESHOLD })}</p>
             <p className={styles.cardValue}>{lowStockItems.length}</p>
             
             {lowStockItems.length > 0 ? (

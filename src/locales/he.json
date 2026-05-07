@@ -126,7 +126,7 @@
     "inventory_title": "מלאי החנות",
     "total_products": "סה״כ פריטים בחנות",
     "unique_items": "פריטים ייחודיים",
-    "low_stock": "עומדים להיגמר (מלאי < 5)",
+    "low_stock": "עומדים להיגמר (מלאי < {{threshold}})",
     "healthy_stock": "מלאי תקין",
     "out_of_stock": "אזלו מהמלאי",
     "all_in_stock": "ללא פריטים חסרים",
